@@ -13,4 +13,8 @@ if [ "${RUN_SEEDERS:-true}" = "true" ]; then
   php artisan db:seed --force --no-interaction
 fi
 
+if [ "${IMPORT_SNAPSHOTS:-true}" = "true" ]; then
+  php artisan scraper:import-snapshots --no-interaction
+fi
+
 exec php -S 0.0.0.0:8080 -t public
