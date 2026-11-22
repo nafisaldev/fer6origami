@@ -148,14 +148,23 @@ class Anime extends Model
         }
 
         if (Str::startsWith($value, ['http://', 'https://'])) {
-            return $value;
+            return $this->versionImageProxyUrl($value);
         }
 
         if (Str::startsWith($value, '/')) {
-            return url($value);
+            return url($this->versionImageProxyUrl($value));
         }
 
         return Storage::disk('public')->url($value);
+    }
+
+    private function versionImageProxyUrl(string $url): string
+    {
+        if (! str_contains($url, 'image-proxy') || str_contains($url, 'v=2')) {
+            return $url;
+        }
+
+        return $url . (str_contains($url, '?') ? '&' : '?') . 'v=2';
     }
 
     public function getRouteIdAttribute(): string

@@ -2360,7 +2360,7 @@ class OtakudesuApiService
                     return $url;
                 }
 
-                return route('image.proxy', ['url' => $url], false);
+                return route('image.proxy', ['url' => $url, 'v' => 2], false);
             }
         }
 

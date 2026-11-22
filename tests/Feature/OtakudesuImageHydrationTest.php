@@ -31,7 +31,17 @@ class OtakudesuImageHydrationTest extends TestCase
         $this->assertSame('one-piece', $anime->id);
         $this->assertStringNotContainsString('placehold.co', $anime->poster_image);
         $this->assertStringContainsString('/image-proxy?url=', $anime->poster_image);
+        $this->assertStringContainsString('v=2', $anime->poster_image);
         $this->assertStringContainsString('One-Piece.jpg', rawurldecode($anime->poster_image));
+    }
+
+    public function test_existing_anime_proxy_urls_get_a_cache_busting_version(): void
+    {
+        $anime = new \App\Models\Anime([
+            'poster_path' => '/image-proxy?url=' . rawurlencode('https://otakudesu.blog/poster.jpg'),
+        ]);
+
+        $this->assertStringContainsString('v=2', $anime->poster_image);
     }
 
     private function animeListHtml(): string

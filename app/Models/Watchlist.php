@@ -38,11 +38,17 @@ class Watchlist extends Model
 
     public function toAnimeCard(): Fluent
     {
+        $poster = $this->poster_path ?: asset('images/poster-placeholder.svg');
+
+        if (str_contains($poster, 'image-proxy') && ! str_contains($poster, 'v=2')) {
+            $poster .= (str_contains($poster, '?') ? '&' : '?') . 'v=2';
+        }
+
         return new Fluent([
             'id' => $this->anime_api_id,
             'route_id' => $this->anime_url,
             'title' => $this->anime_title,
-            'poster_image' => $this->poster_path ?: asset('images/poster-placeholder.svg'),
+            'poster_image' => $poster,
             'synopsis' => 'Disimpan dari katalog Otakudesu API.',
             'studio' => $this->studio,
             'year' => $this->year,
