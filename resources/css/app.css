@@ -35,6 +35,16 @@
 }
 
 @layer components {
+    .filter-panel > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    @media (min-width: 1024px) {
+        .filter-panel > summary {
+            display: none;
+        }
+    }
+
     /* Human-crafted surface elevation instead of excessive glassmorphism */
     .surface-panel {
         background-color: #11131b;

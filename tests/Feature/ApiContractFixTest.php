@@ -40,6 +40,31 @@ class ApiContractFixTest extends TestCase
             ->assertJsonPath('search_results.0.id', 'naruto-shippuuden-sub-indo');
     }
 
+    public function test_api_items_expose_normalized_poster_fields(): void
+    {
+        Http::fake([
+            'http://127.0.0.1:3000/api/anime-list' => Http::response([
+                'status' => 'success',
+                'animeList' => [
+                    [
+                        'id' => 'compass-20-sub-indo',
+                        'title' => '#Compass 2.0',
+                        'thumb' => 'https://otakudesu.blog/wp-content/uploads/compass.jpg',
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $response = $this->getJson('/api/anime-list');
+
+        $response->assertOk();
+
+        $item = $response->json('animeList.0');
+
+        $this->assertStringContainsString('image-proxy', (string) ($item['poster_image'] ?? ''));
+        $this->assertStringContainsString('image-proxy', (string) ($item['banner_image'] ?? ''));
+    }
+
     public function test_v1_compatibility_routes_are_registered(): void
     {
         $uris = collect(Route::getRoutes())

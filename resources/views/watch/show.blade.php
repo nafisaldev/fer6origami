@@ -321,7 +321,7 @@
                             alt="{{ $episode->anime->title }}"
                             loading="lazy"
                             decoding="async"
-                            data-fallback-src="https://placehold.co/600x900/11131b/e53535?text=No+Image"
+                            data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                             class="h-full w-full object-cover"
                         >
                     </div>
@@ -388,7 +388,7 @@
                                             alt="{{ $anime->title }}"
                                             loading="lazy"
                                             decoding="async"
-                                            data-fallback-src="https://placehold.co/600x900/11131b/e53535?text=No+Image"
+                                            data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                                             class="h-full w-full object-cover"
                                         >
                                     </div>

@@ -35,7 +35,7 @@ class Banner extends Model
     public function getImageUrlAttribute(): string
     {
         if (blank($this->image_path)) {
-            return 'https://placehold.co/1400x700/111827/f43f5e?text=' . urlencode($this->title);
+            return asset('images/poster-placeholder.svg');
         }
 
         if (Str::startsWith($this->image_path, ['http://', 'https://'])) {

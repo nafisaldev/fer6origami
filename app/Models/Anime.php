@@ -129,7 +129,7 @@ class Anime extends Model
     {
         return $this->resolveMediaUrl(
             $this->poster_path,
-            'https://placehold.co/600x900/09090b/f97316?text=' . urlencode($this->title)
+            asset('images/poster-placeholder.svg')
         );
     }
 
@@ -137,7 +137,7 @@ class Anime extends Model
     {
         return $this->resolveMediaUrl(
             $this->banner_path,
-            'https://placehold.co/1400x700/0f172a/e11d48?text=' . urlencode($this->title)
+            asset('images/poster-placeholder.svg')
         );
     }
 

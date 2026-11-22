@@ -332,7 +332,7 @@
             <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($continueWatching as $item)
                     <a href="{{ $item['url'] }}" class="group flex min-w-0 items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.02] p-3 transition hover:border-brand-500/40 hover:bg-white/5">
-                        <img src="{{ $item['anime']->poster_image ?: 'https://placehold.co/88x128/11131b/f97316?text=Anime' }}" alt="{{ $item['anime']->title }}" class="h-16 w-11 shrink-0 rounded-lg object-cover">
+                        <img src="{{ $item['anime']->poster_image ?: asset('images/poster-placeholder.svg') }}" alt="{{ $item['anime']->title }}" class="h-16 w-11 shrink-0 rounded-lg object-cover">
                         <div class="min-w-0 flex-1">
                             <p class="truncate text-xs font-bold text-white">{{ $item['anime']->title }}</p>
                             <p class="mt-0.5 truncate text-[11px] font-semibold text-brand-400">{{ $item['label'] }}</p>

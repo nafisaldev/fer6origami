@@ -2072,8 +2072,8 @@ class OtakudesuApiService
     }
 
     /**
-     * Fill missing poster/metadata on API list items from local scraper snapshots.
-     * Order is preserved; items without a snapshot are returned unchanged.
+     * Fill missing poster/metadata on API list items from local scraper snapshots
+     * and expose normalized poster_image/banner_image fields. Order is preserved.
      *
      * @param  array<int, array>  $items
      * @return array<int, array>
@@ -2082,15 +2082,19 @@ class OtakudesuApiService
     {
         $index = $this->snapshotAnimeIndex();
 
-        if ($index === []) {
-            return $items;
-        }
-
         return array_values(array_map(function (array $item) use ($index): array {
             $id = $this->sanitizeId((string) data_get($item, 'id', ''));
             $snapshot = $index[$id] ?? [];
 
-            return $snapshot === [] ? $item : array_replace($item, $snapshot);
+            $merged = $snapshot === [] ? $item : array_replace($item, $snapshot);
+            $thumb = trim((string) data_get($merged, 'thumb', ''));
+
+            if ($thumb !== '' && $thumb !== 'null') {
+                $merged['poster_image'] = $this->posterImage($thumb);
+                $merged['banner_image'] = $this->bannerImage($thumb);
+            }
+
+            return $merged;
         }, $items));
     }
 
@@ -2332,12 +2336,12 @@ class OtakudesuApiService
 
     private function posterImage(?string $url): string
     {
-        return $this->imageOrFallback($url, 'https://placehold.co/600x900/09090b/f97316?text=No+Image');
+        return $this->imageOrFallback($url, asset('images/poster-placeholder.svg'));
     }
 
     private function bannerImage(?string $url): string
     {
-        return $this->imageOrFallback($url, 'https://placehold.co/1400x700/111827/f43f5e?text=No+Banner');
+        return $this->imageOrFallback($url, asset('images/poster-placeholder.svg'));
     }
 
     private function imageOrFallback(?string $url, string $fallback): string
@@ -2365,7 +2369,8 @@ class OtakudesuApiService
 
     private function isFallbackImage(string $url): bool
     {
-        return str_contains($url, 'placehold.co');
+        return str_contains($url, 'placehold.co')
+            || str_contains($url, 'poster-placeholder.svg');
     }
 
     private function extractSiteId(?string $url, string $segment): string

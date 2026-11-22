@@ -5,7 +5,7 @@
 @section('content')
     <div class="space-y-6">
         {{-- CATALOG HEADER --}}
-        <div class="surface-panel flex flex-col justify-between gap-4 rounded-xl p-6 md:flex-row md:items-center">
+        <div class="surface-panel flex flex-col justify-between gap-4 rounded-xl p-5 sm:p-6 md:flex-row md:items-center">
             <div>
                 <span class="text-xs font-bold uppercase tracking-wider text-brand-400">Collection Library</span>
                 <h1 class="mt-1 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
@@ -36,7 +36,7 @@
         <section class="grid gap-6 lg:grid-cols-12">
             {{-- FILTER SIDEBAR (3 COLS) --}}
             <aside class="lg:col-span-3">
-                <div class="surface-panel rounded-xl p-5 sticky top-20">
+                <div class="surface-panel rounded-xl p-5 lg:sticky lg:top-20">
                     <div class="mb-4 flex items-center justify-between border-b border-white/5 pb-2">
                         <h2 class="text-xs font-bold uppercase tracking-wider text-white">Search Filters</h2>
                         @if (!empty(array_filter($selectedFilters)))
@@ -58,46 +58,57 @@
                             >
                         </div>
 
-                        <div>
-                            <label class="mb-1.5 block font-semibold text-slate-300">Genre</label>
-                            <select name="genre" class="w-full rounded-lg border border-white/10 bg-[#161924] px-3 py-2 text-xs text-white focus:border-brand-500 focus:outline-none">
-                                <option value="">All Genres</option>
-                                @foreach ($genres as $genre)
-                                    <option value="{{ $genre->id }}" @selected(($selectedFilters['genre'] ?? '') === $genre->id)>{{ $genre->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <details class="filter-panel mt-1 border-t border-white/5 pt-3 lg:mt-0 lg:border-0 lg:pt-0" open>
+                            <summary class="flex min-h-[36px] cursor-pointer list-none items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-300 lg:hidden">
+                                Advanced filters
+                                <svg class="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </summary>
 
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="mb-1.5 block font-semibold text-slate-300">Year</label>
-                                <select name="year" class="w-full rounded-lg border border-white/10 bg-[#161924] px-3 py-2 text-xs text-white focus:border-brand-500 focus:outline-none">
-                                    <option value="">All</option>
-                                    @foreach ($years as $year)
-                                        <option value="{{ $year }}" @selected((string) ($selectedFilters['year'] ?? '') === (string) $year)>{{ $year }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
-                                <label class="mb-1.5 block font-semibold text-slate-300">Status</label>
-                                <select name="status" class="w-full rounded-lg border border-white/10 bg-[#161924] px-3 py-2 text-xs text-white focus:border-brand-500 focus:outline-none">
-                                    <option value="">All</option>
-                                    @foreach ($statuses as $value => $label)
-                                        <option value="{{ $value }}" @selected(($selectedFilters['status'] ?? '') === $value)>{{ $label }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                            <div class="mt-3 space-y-4 lg:mt-0">
+                                <div>
+                                    <label class="mb-1.5 block font-semibold text-slate-300">Genre</label>
+                                    <select name="genre" class="w-full rounded-lg border border-white/10 bg-[#161924] px-3 py-2 text-xs text-white focus:border-brand-500 focus:outline-none">
+                                        <option value="">All Genres</option>
+                                        @foreach ($genres as $genre)
+                                            <option value="{{ $genre->id }}" @selected(($selectedFilters['genre'] ?? '') === $genre->id)>{{ $genre->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
-                        <div>
-                            <label class="mb-1.5 block font-semibold text-slate-300">Minimum Score</label>
-                            <select name="rating" class="w-full rounded-lg border border-white/10 bg-[#161924] px-3 py-2 text-xs text-white focus:border-brand-500 focus:outline-none">
-                                <option value="">All Scores</option>
-                                @foreach ($ratings as $value => $label)
-                                    <option value="{{ $value }}" @selected(($selectedFilters['rating'] ?? '') === $value)>{{ $label }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="mb-1.5 block font-semibold text-slate-300">Year</label>
+                                        <select name="year" class="w-full rounded-lg border border-white/10 bg-[#161924] px-3 py-2 text-xs text-white focus:border-brand-500 focus:outline-none">
+                                            <option value="">All</option>
+                                            @foreach ($years as $year)
+                                                <option value="{{ $year }}" @selected((string) ($selectedFilters['year'] ?? '') === (string) $year)>{{ $year }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="mb-1.5 block font-semibold text-slate-300">Status</label>
+                                        <select name="status" class="w-full rounded-lg border border-white/10 bg-[#161924] px-3 py-2 text-xs text-white focus:border-brand-500 focus:outline-none">
+                                            <option value="">All</option>
+                                            @foreach ($statuses as $value => $label)
+                                                <option value="{{ $value }}" @selected(($selectedFilters['status'] ?? '') === $value)>{{ $label }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="mb-1.5 block font-semibold text-slate-300">Minimum Score</label>
+                                    <select name="rating" class="w-full rounded-lg border border-white/10 bg-[#161924] px-3 py-2 text-xs text-white focus:border-brand-500 focus:outline-none">
+                                        <option value="">All Scores</option>
+                                        @foreach ($ratings as $value => $label)
+                                            <option value="{{ $value }}" @selected(($selectedFilters['rating'] ?? '') === $value)>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </details>
 
                         <button type="submit" class="w-full rounded-lg bg-brand-500 py-2.5 font-bold text-white shadow-subtle transition hover:bg-brand-600">
                             Apply Filters
@@ -109,7 +120,7 @@
             {{-- ANIME GRID (9 COLS) --}}
             <div class="lg:col-span-9">
                 @if ($animes->count())
-                    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
+                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
                         @foreach ($animes as $anime)
                             <x-anime-card :anime="$anime" />
                         @endforeach

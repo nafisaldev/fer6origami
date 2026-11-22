@@ -42,7 +42,7 @@ class Watchlist extends Model
             'id' => $this->anime_api_id,
             'route_id' => $this->anime_url,
             'title' => $this->anime_title,
-            'poster_image' => $this->poster_path ?: 'https://placehold.co/600x900/09090b/f97316?text=Anime',
+            'poster_image' => $this->poster_path ?: asset('images/poster-placeholder.svg'),
             'synopsis' => 'Disimpan dari katalog Otakudesu API.',
             'studio' => $this->studio,
             'year' => $this->year,

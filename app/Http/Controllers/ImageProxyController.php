@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Response;
 
 class ImageProxyController extends Controller
 {
@@ -55,16 +55,20 @@ class ImageProxyController extends Controller
             ]);
         }
 
+        $redirectKey = 'image-proxy:redirect:' . md5($url);
+
+        if (Cache::has($redirectKey)) {
+            return $this->redirectToSource($url);
+        }
+
         try {
             $payload = Cache::remember('image-proxy:v2:' . md5($url), now()->addHours(24), function () use ($url) {
                 return $this->fetchImagePayload($url);
             });
         } catch (\Throwable $e) {
-            $payload = Cache::remember(
-                'image-proxy:fallback:' . md5($url),
-                now()->addMinutes(30),
-                fn (): array => $this->placeholderPayload()
-            );
+            Cache::put($redirectKey, $url, now()->addMinutes(15));
+
+            return $this->redirectToSource($url);
         }
 
         return response(base64_decode((string) ($payload['body'] ?? ''), true) ?: '', 200, [
@@ -74,17 +78,11 @@ class ImageProxyController extends Controller
         ]);
     }
 
-    private function placeholderPayload(): array
+    private function redirectToSource(string $url): Response
     {
-        $path = public_path('images/poster-placeholder.svg');
-        $svg = is_file($path)
-            ? (string) file_get_contents($path)
-            : '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450"><rect width="300" height="450" fill="#11131b"/></svg>';
-
-        return [
-            'body' => base64_encode($svg),
-            'content_type' => 'image/svg+xml',
-        ];
+        return redirect()->away($url, 302, [
+            'Cache-Control' => 'public, max-age=300',
+        ]);
     }
 
     private function fetchImagePayload(string $url): array
@@ -144,9 +142,9 @@ class ImageProxyController extends Controller
         $configuredHost = strtolower((string) parse_url((string) config('services.otakudesu.source_url', 'https://otakudesu.blog'), PHP_URL_HOST));
 
         $candidateHosts = array_values(array_unique(array_filter([
-            $configuredHost ?: 'otakudesu.blog',
-            'otakudesu.blog',
             $host,
+            'otakudesu.blog',
+            $configuredHost ?: 'otakudesu.blog',
             'otakudesu.candid.asia',
             'otakudesu.cc',
         ])));

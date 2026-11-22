@@ -34,7 +34,7 @@ class Studio extends Model
     public function getLogoUrlAttribute(): string
     {
         if (blank($this->logo_path)) {
-            return 'https://placehold.co/200x200/111827/e53535?text=' . urlencode(substr($this->name, 0, 3));
+            return asset('images/poster-placeholder.svg');
         }
 
         if (Str::startsWith($this->logo_path, ['http://', 'https://'])) {

@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         @php
             $siteName = \App\Models\WebsiteSetting::get('site_name', 'Fer6origami');
             $defaultMetaTitle = \App\Models\WebsiteSetting::get('meta_title', 'Fer6origami — Anime Streaming & Catalog Platform');
@@ -38,7 +38,6 @@
         <link rel="manifest" href="/manifest.webmanifest">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="preconnect" href="https://placehold.co" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 
         @php
@@ -97,7 +96,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    <div class="mx-auto w-full max-w-7xl px-4 pb-24 pt-5 sm:px-6 sm:pb-8 sm:pt-8 lg:px-8">
                         <x-flash-message />
                         @yield('content')
                     </div>
@@ -219,6 +218,19 @@
         </div>
 
         <script>
+            // Keep the catalog filters collapsed on phones and expanded on desktop.
+            document.querySelectorAll('.filter-panel').forEach((panel) => {
+                const desktop = window.matchMedia('(min-width: 1024px)');
+
+                if (!desktop.matches) {
+                    panel.open = false;
+                }
+
+                desktop.addEventListener('change', (event) => {
+                    panel.open = event.matches;
+                });
+            });
+
             // Clean dropdown & menu toggles
             document.querySelectorAll('[data-menu-toggle]').forEach((button) => {
                 button.addEventListener('click', () => {

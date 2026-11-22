@@ -19,7 +19,7 @@
 
         {{-- MAIN HERO BACKDROP & OVERVIEW --}}
         <section class="relative overflow-hidden rounded-2xl border border-white/5 bg-[#11131b]">
-            <div class="relative min-h-[460px]">
+            <div class="relative min-h-[420px] sm:min-h-[460px]">
                 {{-- BACKDROP BANNER --}}
                 <img
                     src="{{ $anime->banner_image }}"
@@ -27,7 +27,7 @@
                     loading="eager"
                     fetchpriority="high"
                     decoding="async"
-                    data-fallback-src="https://placehold.co/1400x700/11131b/e53535?text=Fer6origami"
+                    data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                     class="absolute inset-0 h-full w-full object-cover object-top opacity-30"
                 >
                 <div class="cinematic-hero-scrim absolute inset-0"></div>
@@ -36,14 +36,14 @@
                 {{-- DETAILS GRID --}}
                 <div class="relative grid gap-8 p-6 sm:p-8 lg:grid-cols-12 lg:gap-10">
                     {{-- POSTER COLUMN --}}
-                    <div class="mx-auto min-w-0 w-48 shrink-0 sm:w-56 lg:col-span-4 lg:w-full">
+                    <div class="mx-auto min-w-0 w-40 shrink-0 sm:w-56 lg:col-span-4 lg:w-full">
                         <div class="relative aspect-[3/4] overflow-hidden rounded-xl bg-slate-900 shadow-elevated">
                             <img
                                 src="{{ $anime->poster_image }}"
                                 alt="{{ $anime->title }}"
                                 loading="eager"
                                 decoding="async"
-                                data-fallback-src="https://placehold.co/600x900/11131b/e53535?text=No+Poster"
+                                data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                                 class="h-full w-full object-cover"
                             >
                             @php
@@ -60,7 +60,7 @@
                         </div>
 
                         {{-- QUICK COUNTERS --}}
-                        <div class="mt-3 grid grid-cols-2 gap-2 text-center text-xs">
+                        <div class="mt-3 hidden grid-cols-2 gap-2 text-center text-xs sm:grid">
                             <div class="surface-card rounded-lg p-2.5">
                                 <span class="text-[10px] uppercase tracking-wider text-slate-400">Episodes</span>
                                 <p class="mt-0.5 font-display text-base font-bold text-white">{{ $anime->episodes->count() }}</p>
@@ -295,7 +295,7 @@
                                             alt="{{ $related->title }}"
                                             loading="lazy"
                                             decoding="async"
-                                            data-fallback-src="https://placehold.co/600x900/11131b/e53535?text=No+Image"
+                                            data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                                             class="h-full w-full object-cover"
                                         >
                                     </div>

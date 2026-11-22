@@ -12,14 +12,14 @@
                 : $trendingAnimes->concat($popularAnimes)->unique('id')->take(5)->values());
     @endphp
 
-    <div class="space-y-12">
+    <div class="space-y-14 sm:space-y-16 lg:space-y-20">
         {{-- INTERACTIVE ROTATING HERO SPOTLIGHT CAROUSEL --}}
         <section id="hero-carousel" class="relative overflow-hidden rounded-2xl border border-white/5 bg-[#11131b] animate-gradient-border" data-reveal="fade" data-active-slide="0" data-total-slides="{{ $heroSlides->count() }}">
             {{-- Ambient light orbs --}}
-            <div class="absolute -top-16 -left-16 w-32 h-32 rounded-full bg-brand-500/10 blur-3xl pointer-events-none" aria-hidden="true"></div>
-            <div class="absolute -bottom-10 -right-20 w-32 h-32 rounded-full bg-brand-500/10 blur-3xl pointer-events-none" aria-hidden="true"></div>
+            <div class="absolute -top-16 -left-16 hidden w-32 h-32 rounded-full bg-brand-500/10 blur-3xl pointer-events-none sm:block" aria-hidden="true"></div>
+            <div class="absolute -bottom-10 -right-20 hidden w-32 h-32 rounded-full bg-brand-500/10 blur-3xl pointer-events-none sm:block" aria-hidden="true"></div>
 
-            <div class="relative min-h-[560px] sm:min-h-[540px] lg:min-h-[560px]">
+            <div class="relative min-h-[470px] sm:min-h-[540px] lg:min-h-[560px]">
                 {{-- CAROUSEL SLIDES --}}
                 @foreach ($heroSlides as $index => $anime)
                     <div
@@ -30,7 +30,7 @@
                         <img
                             src="{{ $anime->banner_image ?? ($anime->image_url ?? $anime->poster_image) }}"
                             alt="{{ $anime->title }}"
-                            data-fallback-src="https://placehold.co/1600x900/11131b/e53535?text=Fer6origami"
+                            data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                             loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
                             @if ($index === 0) fetchpriority="high" @endif
                             decoding="async"
@@ -40,7 +40,7 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-[#11131b] via-[#11131b]/40 to-transparent"></div>
 
                         {{-- SLIDE CONTENT GRID --}}
-                        <div class="relative grid min-h-[600px] items-center gap-8 px-6 py-10 sm:min-h-[540px] sm:px-10 lg:min-h-[560px] lg:grid-cols-12 lg:gap-10">
+                        <div class="relative grid min-h-[470px] items-center gap-8 px-5 pb-24 pt-8 sm:min-h-[540px] sm:px-10 sm:pb-24 sm:pt-10 lg:min-h-[560px] lg:grid-cols-12 lg:gap-10 lg:pb-10">
                             {{-- LEFT INFO (ENGLISH) --}}
                             <div class="flex min-w-0 flex-col justify-center lg:col-span-7">
                                 {{-- BADGES --}}
@@ -49,11 +49,11 @@
                                         <span class="h-1.5 w-1.5 rounded-full bg-brand-500 animate-pulse"></span>
                                         Featured Spotlight #{{ $index + 1 }}
                                     </span>
-                                    <span class="rounded-md bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-slate-200 capitalize">
+                                    <span class="hidden rounded-md bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-slate-200 capitalize sm:inline-flex">
                                         {{ $anime->status ?: 'Available' }}
                                     </span>
                                     @if (!empty($anime->year))
-                                        <span class="rounded-md bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-slate-300">
+                                        <span class="hidden rounded-md bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-slate-300 sm:inline-flex">
                                             {{ $anime->year }}
                                         </span>
                                     @endif
@@ -62,7 +62,7 @@
                                             ? (float) $anime->score
                                             : round(7.6 + (abs(crc32($anime->id ?? '')) % 110) / 100, 1);
                                     @endphp
-                                    <span class="inline-flex items-center gap-1.5 rounded-md bg-amber-400/15 border border-amber-400/20 px-2.5 py-0.5 text-xs font-bold text-amber-300">
+                                    <span class="hidden items-center gap-1.5 rounded-md border border-amber-400/20 bg-amber-400/15 px-2.5 py-0.5 text-xs font-bold text-amber-300 sm:inline-flex">
                                         <svg class="h-3 w-3 fill-amber-400" viewBox="0 0 20 20">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                         </svg>
@@ -86,7 +86,7 @@
                                             <span class="text-brand-400">{{ $anime->episode_label }}</span>
                                         @endif
                                     </div>
-                                    <p class="line-clamp-3 text-sm leading-relaxed text-slate-300">
+                                    <p class="line-clamp-2 text-sm leading-relaxed text-slate-300 sm:line-clamp-3">
                                         {{ $anime->synopsis && !str_starts_with($anime->synopsis, 'Detail') && !str_starts_with($anime->synopsis, 'Episode ')
                                             ? $anime->synopsis
                                             : ($anime->title . ' is currently featured in Fer6origami. Watch the latest episodes in high definition with fast streaming servers.') }}
@@ -96,7 +96,7 @@
                                 {{-- GENRE PILLS --}}
                                 @if (!empty($anime->genres) && $anime->genres->count())
                                     <div class="mt-4 flex flex-wrap gap-1.5">
-                                        @foreach ($anime->genres->take(4) as $genre)
+                                        @foreach ($anime->genres->take(3) as $genre)
                                             <span class="rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-medium text-slate-300">
                                                 {{ $genre->name }}
                                             </span>
@@ -130,7 +130,7 @@
                                             alt="{{ $anime->title }}"
                                             loading="lazy"
                                             decoding="async"
-                                            data-fallback-src="https://placehold.co/600x900/11131b/e53535?text=No+Image"
+                                            data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                                             class="h-full w-full object-cover"
                                         >
                                         <div class="cinematic-card-scrim absolute inset-0"></div>
@@ -215,8 +215,6 @@
                     </a>
                 @endforeach
             </div>
-            {{-- Gradient divider --}}
-            <div class="mt-4 h-px bg-gradient-to-r from-transparent via-brand-500/20 to-transparent" aria-hidden="true"></div>
         </section>
 
         {{-- TRENDING ANIME (4 COLUMNS) --}}
@@ -232,7 +230,7 @@
                     </a>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
                     @foreach ($trendingAnimes as $anime)
                         <x-anime-card :anime="$anime" />
                     @endforeach
@@ -253,7 +251,7 @@
             </div>
 
             @if ($popularAnimes->isNotEmpty())
-                <div class="grid min-w-0 grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                <div class="grid min-w-0 grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
                     @foreach ($popularAnimes as $anime)
                         <x-anime-card :anime="$anime" />
                     @endforeach
@@ -311,7 +309,7 @@
                                                 alt="{{ $cwTitle }}"
                                                 loading="lazy"
                                                 decoding="async"
-                                                data-fallback-src="https://placehold.co/600x900/11131b/e53535?text=No+Poster"
+                                                data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                                                 class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                                             >
                                         @else
@@ -368,7 +366,7 @@
                                     alt="{{ $episode->anime->title }}"
                                     loading="lazy"
                                     decoding="async"
-                                    data-fallback-src="https://placehold.co/600x900/11131b/e53535?text=No+Image"
+                                    data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                                     class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                                 >
                                 <div class="cinematic-card-scrim absolute inset-0"></div>
@@ -422,14 +420,14 @@
                                         alt="{{ $anime->title }}"
                                         loading="lazy"
                                         decoding="async"
-                                        data-fallback-src="https://placehold.co/600x900/11131b/e53535?text=No+Image"
+                                        data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                                         class="h-full w-full object-cover"
                                     >
                                 </div>
                                 <div class="min-w-0 flex-1">
                                     <div class="flex items-center justify-between gap-1">
                                         <h4 class="truncate text-xs font-bold text-white transition group-hover:text-brand-400">{{ $anime->title }}</h4>
-                                        <span class="shrink-0 text-[11px] font-bold text-amber-300">Rating {{ number_format((float) ($anime->score > 0 ? $anime->score : 7.8), 1) }}</span>
+                                        <span class="hidden shrink-0 text-[11px] font-bold text-amber-300 sm:inline">Rating {{ number_format((float) ($anime->score > 0 ? $anime->score : 7.8), 1) }}</span>
                                     </div>
                                     <p class="truncate text-[10px] text-slate-400">{{ $anime->episode_label ?: ($anime->status ?: 'Ongoing') }}</p>
                                 </div>
@@ -459,14 +457,14 @@
                                         alt="{{ $anime->title }}"
                                         loading="lazy"
                                         decoding="async"
-                                        data-fallback-src="https://placehold.co/600x900/11131b/e53535?text=No+Image"
+                                        data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                                         class="h-full w-full object-cover"
                                     >
                                 </div>
                                 <div class="min-w-0 flex-1">
                                     <div class="flex items-center justify-between gap-1">
                                         <h4 class="truncate text-xs font-bold text-white transition group-hover:text-brand-400">{{ $anime->title }}</h4>
-                                        <span class="shrink-0 text-[11px] font-bold text-amber-300">Rating {{ number_format((float) ($anime->score > 0 ? $anime->score : 7.8), 1) }}</span>
+                                        <span class="hidden shrink-0 text-[11px] font-bold text-amber-300 sm:inline">Rating {{ number_format((float) ($anime->score > 0 ? $anime->score : 7.8), 1) }}</span>
                                     </div>
                                     <p class="truncate text-[10px] text-slate-400">{{ $anime->studio ?: 'Completed' }} • {{ $anime->year ?: '' }}</p>
                                 </div>
@@ -539,7 +537,7 @@
                                     alt="{{ $review->anime->title }}"
                                     loading="lazy"
                                     decoding="async"
-                                    data-fallback-src="https://placehold.co/600x900/11131b/e53535?text=No+Poster"
+                                    data-fallback-src="{{ asset('images/poster-placeholder.svg') }}"
                                     class="h-full w-full object-cover"
                                 >
                             </a>
