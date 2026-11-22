@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Notifikasi Membership - AnimeStream')
+@section('title', 'Notifikasi Membership - Fer6origami')
 
 @section('content')
 <div class="space-y-6">

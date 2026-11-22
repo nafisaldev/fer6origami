@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Paket Membership - AnimeStream')
+@section('title', 'Paket Membership - Fer6origami')
 
 @section('content')
 <div class="space-y-8">
@@ -52,7 +52,7 @@
                     <div class="flex items-start justify-between gap-3">
                         <div class="min-w-0">
                             <h2 class="font-display text-xl font-extrabold text-white">{{ $plan->name }}</h2>
-                            <p class="mt-1 text-xs text-slate-400">{{ $plan->tagline ?: 'Paket membership AnimeStream' }}</p>
+                            <p class="mt-1 text-xs text-slate-400">{{ $plan->tagline ?: 'Paket membership Fer6origami' }}</p>
                         </div>
                         @if ($isCurrent)
                             <span class="shrink-0 rounded-lg bg-brand-500/15 px-2 py-1 text-[10px] font-bold text-brand-300">Paket Anda</span>

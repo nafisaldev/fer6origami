@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Invoice ' . $payment->invoice_number . ' - AnimeStream')
+@section('title', 'Invoice ' . $payment->invoice_number . ' - Fer6origami')
 
 @section('content')
 <div class="space-y-6">

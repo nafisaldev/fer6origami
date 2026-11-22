@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Status Pembayaran - AnimeStream')
+@section('title', 'Status Pembayaran - Fer6origami')
 
 @section('content')
 <div class="mx-auto max-w-2xl">
