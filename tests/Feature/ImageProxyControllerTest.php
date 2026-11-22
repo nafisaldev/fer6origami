@@ -27,4 +27,19 @@ class ImageProxyControllerTest extends TestCase
         $response->assertContent('image-body');
         $this->assertSame('image/jpeg', $response->headers->get('Content-Type'));
     }
+
+    public function test_image_proxy_serves_placeholder_when_all_upstreams_fail(): void
+    {
+        Cache::flush();
+
+        Http::fake(fn () => Http::response('blocked', 403, [
+            'Content-Type' => 'text/html',
+        ]));
+
+        $response = $this->get('/image-proxy?url=' . rawurlencode('https://otakudesu.best/wp-content/uploads/poster.jpg'));
+
+        $response->assertOk();
+        $this->assertSame('image/svg+xml', $response->headers->get('Content-Type'));
+        $this->assertStringContainsString('Fer6origami', (string) $response->getContent());
+    }
 }

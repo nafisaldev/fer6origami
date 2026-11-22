@@ -55,15 +55,36 @@ class ImageProxyController extends Controller
             ]);
         }
 
-        $payload = Cache::remember('image-proxy:v2:' . md5($url), now()->addHours(24), function () use ($url) {
-            return $this->fetchImagePayload($url);
-        });
+        try {
+            $payload = Cache::remember('image-proxy:v2:' . md5($url), now()->addHours(24), function () use ($url) {
+                return $this->fetchImagePayload($url);
+            });
+        } catch (\Throwable $e) {
+            $payload = Cache::remember(
+                'image-proxy:fallback:' . md5($url),
+                now()->addMinutes(30),
+                fn (): array => $this->placeholderPayload()
+            );
+        }
 
         return response(base64_decode((string) ($payload['body'] ?? ''), true) ?: '', 200, [
             'Content-Type' => (string) ($payload['content_type'] ?? 'image/jpeg'),
             'Cache-Control' => 'public, max-age=604800, stale-while-revalidate=86400, immutable',
             'ETag' => $etag,
         ]);
+    }
+
+    private function placeholderPayload(): array
+    {
+        $path = public_path('images/poster-placeholder.svg');
+        $svg = is_file($path)
+            ? (string) file_get_contents($path)
+            : '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450"><rect width="300" height="450" fill="#11131b"/></svg>';
+
+        return [
+            'body' => base64_encode($svg),
+            'content_type' => 'image/svg+xml',
+        ];
     }
 
     private function fetchImagePayload(string $url): array
