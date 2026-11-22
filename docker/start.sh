@@ -9,8 +9,18 @@ php artisan config:clear || true
 php artisan cache:clear || true
 php artisan view:clear || true
 
+if [ "${DB_CONNECTION:-}" = "sqlite" ]; then
+  DB_FILE="${DB_DATABASE:-/var/www/html/database/database.sqlite}"
+  mkdir -p "$(dirname "$DB_FILE")"
+  touch "$DB_FILE"
+fi
+
 if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
   php artisan migrate --force
+fi
+
+if [ "${RUN_SEEDERS:-false}" = "true" ]; then
+  php artisan db:seed --force
 fi
 
 if [ "${WARM_SNAPSHOTS:-false}" = "true" ]; then
@@ -18,7 +28,7 @@ if [ "${WARM_SNAPSHOTS:-false}" = "true" ]; then
 fi
 
 php artisan config:cache
-php artisan route:cache
+php artisan route:cache || true
 php artisan view:cache
 
 exec php artisan serve --host=0.0.0.0 --port="${PORT}"
