@@ -59,6 +59,46 @@ php artisan scraper:refresh-snapshots --pages=5 --all-genres --deep --anime-limi
 - `GET /api/episode/{episodeId}` - Episode streaming link and server mirrors
 - `POST /api/scrape/refresh` - On-demand trigger to refresh/warm snapshots (supports `pages`, `all_genres`, `deep`, `limit`)
 
+## Deploy to Wasmer Hobby (free, no credit card)
+
+The production Laravel app is deployed at <https://fer6origami.wasmer.app>. The Flutter web build is at <https://nafisaldev.github.io/fer6origami/>.
+
+### Wasmer setup
+
+1. In Wasmer, choose **New project → Import from GitHub** and select `nafisaldev/fer6origami`.
+2. Choose the **laravel** preset and enable the managed **MySQL 8.4** database.
+3. In **Settings → Build and Deployment**, set **Start command** to:
+
+   ```bash
+   bash wasmer-start.sh
+   ```
+
+4. Set these runtime environment variables:
+
+   ```dotenv
+   APP_NAME=Fer6origami
+   APP_ENV=production
+   APP_DEBUG=false
+   APP_KEY=<generate locally with php artisan key:generate --show>
+   APP_URL=https://fer6origami.wasmer.app
+   ASSET_URL=https://fer6origami.wasmer.app
+   LOG_CHANNEL=stderr
+   CACHE_DRIVER=file
+   SESSION_DRIVER=cookie
+   QUEUE_CONNECTION=sync
+   DB_CONNECTION=mysql
+   OTAKUDESU_DISABLE_PROXY=true
+   OTAKUDESU_SOURCE_URL=https://otakudesu.best
+   ```
+
+   Wasmer injects `DB_HOST`, `DB_NAME`, `DB_USERNAME`, `DB_PASSWORD`, and `DB_PORT` automatically when the managed database is enabled.
+
+5. Deploy. On first boot `wasmer-start.sh` runs migrations, idempotent seeders, then `php artisan scraper:import-snapshots`, which loads the bundled catalog from `database/data/scraper_snapshots.json`.
+
+`RUN_SEEDERS` and `IMPORT_SNAPSHOTS` default to `true`. They can be set to `false` later; the importer already skips snapshots that exist.
+
+When the upstream Otakudesu host is blocked or returns 403, pages are served from local snapshots and `/image-proxy` returns `public/images/poster-placeholder.svg` instead of a 500 response.
+
 ## Deploy to Koyeb for free testing
 
 This repository includes a Docker-based runtime that is compatible with Koyeb's Git deployment flow.
@@ -115,5 +155,7 @@ For Render, use a shared `APP_KEY` for both web and cron services and set `APP_U
 ## Important notes
 
 - Snapshot storage is database-backed via `scraper_snapshots`, so data survives restarts and redeploys.
-- Koyeb free tier is suitable for testing, not heavy production traffic.
-- Render remains the better fit for long-term production because it supports the multi-service setup more naturally.
+- The bundled snapshot import makes a fresh database usable without waiting for the public scraper.
+- Wasmer Hobby is the active free deployment; both Koyeb and Render currently require a card for new services.
+- Production uses the Wasmer managed MySQL database and a PHP built-in server started by `wasmer-start.sh`.
+- A platform-level cron for `php artisan schedule:run` is still needed to auto-expire memberships; the Laravel schedule itself is already configured in `app/Console/Kernel.php`.
