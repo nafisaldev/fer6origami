@@ -1,0 +1,21 @@
+{
+  "name": "Fer6origami Anime",
+  "short_name": "Fer6origami",
+  "description": "Anime Streaming & Catalog Atelier",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090a0f",
+  "theme_color": "#090a0f",
+  "icons": [
+    {
+      "src": "/images/emblem.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

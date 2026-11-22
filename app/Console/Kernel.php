@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('scraper:refresh-snapshots')->everyThirtyMinutes()->withoutOverlapping();
+        $schedule->command('membership:sync')->dailyAt('01:00')->withoutOverlapping();
     }
 
     /**

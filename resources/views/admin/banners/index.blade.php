@@ -14,6 +14,8 @@
             </a>
         </div>
 
+        @include('admin.partials.delete-all-button', ['resource' => 'banners', 'label' => 'Banner'])
+
         <div class="glass-panel rounded-[32px] border border-white/10 p-6 shadow-glow">
             <div class="grid gap-6 md:grid-cols-2">
                 @foreach ($banners as $banner)

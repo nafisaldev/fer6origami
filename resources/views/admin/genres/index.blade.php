@@ -14,6 +14,8 @@
             </a>
         </div>
 
+        @include('admin.partials.delete-all-button', ['resource' => 'genres', 'label' => 'Genre'])
+
         <div class="glass-panel rounded-[32px] border border-white/10 p-6 shadow-glow">
             <div class="overflow-x-auto">
                 <table class="min-w-full text-left text-sm text-slate-300">

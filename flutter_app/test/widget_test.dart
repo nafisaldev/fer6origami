@@ -1,30 +1,19 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import 'package:animestream_mobile/main.dart';
+import 'package:animestream_mobile/core/constants/app_colors.dart';
+import 'package:animestream_mobile/core/theme/app_theme.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  TestWidgetsFlutterBinding.ensureInitialized();
+  GoogleFonts.config.allowRuntimeFetching = false;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  test('Fer6origami design tokens are applied', () {
+    expect(AppColors.brand, const Color(0xFFE53535));
+    expect(AppColors.background, const Color(0xFF090A0F));
+    expect(AppColors.panel, const Color(0xFF11131B));
+    expect(AppTheme.darkTheme.scaffoldBackgroundColor, AppColors.background);
+    expect(AppTheme.darkTheme.colorScheme.primary, AppColors.brand);
   });
 }

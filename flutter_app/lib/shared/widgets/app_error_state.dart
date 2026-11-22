@@ -24,23 +24,27 @@ class AppErrorState extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 88,
-              height: 88,
+              width: 64,
+              height: 64,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(28),
-                color: const Color(0x14FFFFFF),
-                border: Border.all(color: AppColors.stroke),
+                borderRadius: BorderRadius.circular(16),
+                color: AppColors.card,
+                border: Border.all(color: AppColors.borderStrong),
               ),
               alignment: Alignment.center,
-              child: const Icon(Icons.wifi_off_rounded, size: 36, color: Colors.white70),
+              child: const Icon(
+                Icons.wifi_off_rounded,
+                size: 28,
+                color: AppColors.textSecondary,
+              ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
             Text(
               title,
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             Text(
               message,
               style: Theme.of(context).textTheme.bodyMedium,
@@ -50,7 +54,7 @@ class AppErrorState extends StatelessWidget {
             SizedBox(
               width: 180,
               child: CustomButton.primary(
-                label: 'Coba lagi',
+                label: 'Try again',
                 onPressed: onRetry,
                 icon: Icons.refresh_rounded,
               ),

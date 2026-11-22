@@ -21,7 +21,7 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
           child: Column(
@@ -29,17 +29,18 @@ class SectionTitle extends StatelessWidget {
             children: [
               Text(
                 kicker.toUpperCase(),
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.textSecondary,
-                      letterSpacing: 3.2,
-                      fontWeight: FontWeight.w800,
-                    ),
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.65,
+                  color: AppColors.brand400,
+                ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Text(title, style: Theme.of(context).textTheme.headlineSmall),
               if (subtitle != null) ...[
-                const SizedBox(height: 6),
-                Text(subtitle!, style: Theme.of(context).textTheme.bodyMedium),
+                const SizedBox(height: 4),
+                Text(subtitle!, style: Theme.of(context).textTheme.bodySmall),
               ],
             ],
           ),
@@ -47,7 +48,16 @@ class SectionTitle extends StatelessWidget {
         if (actionLabel != null)
           TextButton(
             onPressed: onActionTap,
-            child: Text(actionLabel!),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.brand400,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(
+              actionLabel!,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+            ),
           ),
       ],
     );

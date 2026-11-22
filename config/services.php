@@ -32,17 +32,28 @@ return [
     ],
 
     'otakudesu' => [
-        'base_url' => env('OTAKUDESU_API_BASE_URL', 'http://127.0.0.1:3000/api'),
-        'source_url' => env('OTAKUDESU_SOURCE_URL', 'https://otakudesu.best'),
+        'base_url' => env('OTAKUDESU_API_BASE_URL', in_array(env('APP_ENV'), ['local', 'testing'], true) ? 'http://127.0.0.1:3000/api' : ''),
+        'source_url' => env('OTAKUDESU_SOURCE_URL', 'https://otakudesu.blog'),
         'disable_proxy' => env('OTAKUDESU_DISABLE_PROXY', true),
         'proxy_images' => env('OTAKUDESU_PROXY_IMAGES', env('APP_ENV') !== 'local'),
-        'warm_pages' => max(1, (int) env('OTAKUDESU_WARM_PAGES', env('APP_ENV') === 'local' ? 1 : 2)),
+        'warm_pages' => max(1, (int) env('OTAKUDESU_WARM_PAGES', 5)),
         'warm_genres' => array_values(array_filter(array_map('trim', explode(',', (string) env(
             'OTAKUDESU_WARM_GENRES',
-            env('APP_ENV') === 'local'
-                ? 'action,fantasy'
-                : 'action,fantasy,romance,comedy,school,adventure'
+            'action,fantasy,romance,comedy,school,adventure,drama,shounen,supernatural,slice-of-life'
         ))))),
+    ],
+
+    'midtrans' => [
+        'server_key' => env('MIDTRANS_SERVER_KEY'),
+        'client_key' => env('MIDTRANS_CLIENT_KEY'),
+        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+        'base_url' => env(
+            'MIDTRANS_API_BASE_URL',
+            env('MIDTRANS_IS_PRODUCTION', false)
+                ? 'https://api.midtrans.com'
+                : 'https://api.sandbox.midtrans.com'
+        ),
+        'webhook_path' => env('MIDTRANS_WEBHOOK_PATH', '/payments/midtrans/webhook'),
     ],
 
 ];

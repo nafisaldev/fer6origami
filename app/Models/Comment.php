@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Comment extends Model
+{
+    use HasFactory;
+
+    public const STATUSES = [
+        'published' => 'Published',
+        'hidden' => 'Hidden',
+        'spam' => 'Spam',
+    ];
+
+    protected $fillable = [
+        'user_id',
+        'anime_id',
+        'episode_id',
+        'parent_id',
+        'content',
+        'status',
+        'reports_count',
+    ];
+
+    protected $casts = [
+        'reports_count' => 'integer',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function anime(): BelongsTo
+    {
+        return $this->belongsTo(Anime::class);
+    }
+
+    public function episode(): BelongsTo
+    {
+        return $this->belongsTo(Episode::class);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Comment::class, 'parent_id');
+    }
+
+    public function replies(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'parent_id');
+    }
+}

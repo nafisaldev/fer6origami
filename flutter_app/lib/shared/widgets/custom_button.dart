@@ -24,31 +24,41 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = isPrimary ? AppColors.ember : const Color(0x12FFFFFF);
-    final foregroundColor = Colors.white;
-
     return SizedBox(
-      height: 56,
+      height: 44,
       child: FilledButton(
         onPressed: onPressed,
         style: FilledButton.styleFrom(
-          backgroundColor: backgroundColor,
-          foregroundColor: foregroundColor,
+          backgroundColor: isPrimary ? AppColors.brand : AppColors.card,
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: AppColors.overlay,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-            side: isPrimary ? BorderSide.none : const BorderSide(color: AppColors.stroke),
+            borderRadius: BorderRadius.circular(10),
+            side: isPrimary
+                ? BorderSide.none
+                : const BorderSide(color: AppColors.borderStrong),
           ),
+          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon ?? Icons.play_arrow_rounded, size: 20),
-            const SizedBox(width: 10),
-            Text(
-              label,
-              style: const TextStyle(fontWeight: FontWeight.w800, letterSpacing: 0.15),
+            if (icon != null) ...[
+              Icon(icon, size: 16),
+              const SizedBox(width: 8),
+            ],
+            Flexible(
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ],
         ),

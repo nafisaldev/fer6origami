@@ -15,7 +15,7 @@ class AnimeStreamApp extends ConsumerWidget {
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'AnimeStream',
+      title: 'Fer6origami',
       themeMode: settings.themeMode,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

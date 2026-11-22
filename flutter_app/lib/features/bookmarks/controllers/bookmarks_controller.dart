@@ -28,9 +28,10 @@ class BookmarksController extends StateNotifier<Set<String>> {
   }
 }
 
-final bookmarksControllerProvider = StateNotifierProvider<BookmarksController, Set<String>>((ref) {
-  return BookmarksController(ref.watch(preferencesServiceProvider));
-});
+final bookmarksControllerProvider =
+    StateNotifierProvider<BookmarksController, Set<String>>((ref) {
+      return BookmarksController(ref.watch(preferencesServiceProvider));
+    });
 
 final bookmarkedAnimeProvider = FutureProvider<List<Anime>>((ref) async {
   final ids = ref.watch(bookmarksControllerProvider);

@@ -9,9 +9,55 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate
-php artisan scraper:refresh-snapshots --path=home --path=anime-list --path=genres
+# Scrape catalog and anime pages (supports multi-page & all genres)
+php artisan scraper:refresh-snapshots --pages=5 --all-genres
 php artisan serve
 ```
+
+## Maintenance Commands
+
+- **Purge all users except a specific account**
+  ```bash
+  php artisan users:purge --keep="carmela@example.com"
+  ```
+  This command deletes every user record except the one with the provided email, cleaning up related tables (`watchlists`, `comments`, `reports`, etc.). Use with caution; the operation is irreversible.
+
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+# Scrape catalog and anime pages (supports multi-page & all genres)
+php artisan scraper:refresh-snapshots --pages=5 --all-genres
+php artisan serve
+```
+
+## Scraper & REST APIs
+
+### Artisan Scraper Command
+```bash
+# Scrape multiple pages across completed & ongoing anime
+php artisan scraper:refresh-snapshots --pages=5
+
+# Scrape all 36+ genres
+php artisan scraper:refresh-snapshots --all-genres
+
+# Deep scrape including detailed anime metadata
+php artisan scraper:refresh-snapshots --pages=5 --all-genres --deep --anime-limit=50
+```
+
+### Scrape REST API Endpoints
+- `GET /api/home` - Home page feed (ongoing, complete, popular, latest episodes)
+- `GET /api/ongoing-anime?page=1` - Paginated ongoing anime
+- `GET /api/complete-anime?page=1` - Paginated completed anime
+- `GET /api/anime-list` - Full anime title list
+- `GET /api/genres` - Available anime genres
+- `GET /api/genres/{genre}?page=1` - Anime by genre with pagination
+- `GET /api/search?q={query}` - Search anime by keyword
+- `GET /api/anime/{animeId}` - Detailed anime information & episode list
+- `GET /api/episode/{episodeId}` - Episode streaming link and server mirrors
+- `POST /api/scrape/refresh` - On-demand trigger to refresh/warm snapshots (supports `pages`, `all_genres`, `deep`, `limit`)
 
 ## Deploy to Koyeb for free testing
 

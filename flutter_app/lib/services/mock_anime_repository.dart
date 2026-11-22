@@ -45,7 +45,8 @@ class MockAnimeRepository implements AnimeRepository {
   @override
   Future<List<String>> getGenres() async {
     await Future<void>.delayed(const Duration(milliseconds: 220));
-    final genres = _items.expand((item) => item.genres).toSet().toList()..sort();
+    final genres = _items.expand((item) => item.genres).toSet().toList()
+      ..sort();
     return genres;
   }
 
@@ -59,7 +60,9 @@ class MockAnimeRepository implements AnimeRepository {
 
     final results = _items.where((item) {
       return item.title.toLowerCase().contains(normalized) ||
-          item.genres.any((genre) => genre.toLowerCase().contains(normalized)) ||
+          item.genres.any(
+            (genre) => genre.toLowerCase().contains(normalized),
+          ) ||
           item.studio.toLowerCase().contains(normalized) ||
           item.headline.toLowerCase().contains(normalized);
     }).toList();
@@ -329,7 +332,9 @@ List<Anime> _buildMockAnime() {
       entry.type == 'Movie' ? 1 : 12,
       (index) => Episode(
         id: '${entry.id}-episode-${index + 1}',
-        title: entry.type == 'Movie' ? '${entry.title} Full Movie' : 'Episode ${index + 1} - ${entry.title}',
+        title: entry.type == 'Movie'
+            ? '${entry.title} Full Movie'
+            : 'Episode ${index + 1} - ${entry.title}',
         number: index + 1,
         duration: entry.type == 'Movie' ? '1h 46m' : '${22 + (index % 3)} min',
         label: entry.type == 'Movie' ? 'Movie' : 'Episode ${index + 1}',
@@ -340,8 +345,10 @@ List<Anime> _buildMockAnime() {
     return Anime(
       id: entry.id,
       title: entry.title,
-      posterUrl: 'https://images.unsplash.com/${entry.imageSeed}?auto=format&fit=crop&w=900&q=80',
-      bannerUrl: 'https://images.unsplash.com/${entry.imageSeed}?auto=format&fit=crop&w=1600&q=80',
+      posterUrl:
+          'https://images.unsplash.com/${entry.imageSeed}?auto=format&fit=crop&w=900&q=80',
+      bannerUrl:
+          'https://images.unsplash.com/${entry.imageSeed}?auto=format&fit=crop&w=1600&q=80',
       score: entry.score,
       status: entry.status,
       episodeInfo: entry.episodeInfo,

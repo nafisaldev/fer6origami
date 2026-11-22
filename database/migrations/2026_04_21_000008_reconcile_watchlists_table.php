@@ -72,13 +72,20 @@ return new class extends Migration
                 ]);
         }
 
-        $hasUniqueIndex = collect(DB::select('SHOW INDEX FROM watchlists'))
-            ->contains(fn ($index) => ($index->Key_name ?? null) === 'watchlists_user_id_anime_api_id_unique');
+        $hasUniqueIndex = false;
+        if (DB::getDriverName() === 'mysql') {
+            $hasUniqueIndex = collect(DB::select('SHOW INDEX FROM watchlists'))
+                ->contains(fn ($index) => ($index->Key_name ?? null) === 'watchlists_user_id_anime_api_id_unique');
+        }
 
         if (! $hasUniqueIndex && Schema::hasColumn('watchlists', 'anime_api_id')) {
-            Schema::table('watchlists', function (Blueprint $table) {
-                $table->unique(['user_id', 'anime_api_id']);
-            });
+            try {
+                Schema::table('watchlists', function (Blueprint $table) {
+                    $table->unique(['user_id', 'anime_api_id']);
+                });
+            } catch (\Throwable) {
+                // Ignore if unique index already exists
+            }
         }
     }
 
@@ -88,13 +95,20 @@ return new class extends Migration
             return;
         }
 
-        $hasUniqueIndex = collect(DB::select('SHOW INDEX FROM watchlists'))
-            ->contains(fn ($index) => ($index->Key_name ?? null) === 'watchlists_user_id_anime_api_id_unique');
+        $hasUniqueIndex = false;
+        if (DB::getDriverName() === 'mysql') {
+            $hasUniqueIndex = collect(DB::select('SHOW INDEX FROM watchlists'))
+                ->contains(fn ($index) => ($index->Key_name ?? null) === 'watchlists_user_id_anime_api_id_unique');
+        }
 
         if ($hasUniqueIndex) {
-            Schema::table('watchlists', function (Blueprint $table) {
-                $table->dropUnique('watchlists_user_id_anime_api_id_unique');
-            });
+            try {
+                Schema::table('watchlists', function (Blueprint $table) {
+                    $table->dropUnique('watchlists_user_id_anime_api_id_unique');
+                });
+            } catch (\Throwable) {
+                // Ignore if dropping fails
+            }
         }
     }
 };

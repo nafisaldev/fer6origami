@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../shared/widgets/custom_button.dart';
@@ -19,22 +19,25 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
   static const _items = [
     (
-      title: 'Feel the premium anime lounge',
-      message: 'Home dibuat seperti streaming app modern dengan hero cinematic, section terkurasi, dan ritme layout yang elegan.',
-      icon: Icons.auto_awesome_rounded,
-      colors: [Color(0xFFFF6A3D), Color(0xFFFD8C53)],
+      title: 'Cinematic anime experience',
+      message:
+          'Hero spotlight, kurasi rapi, dan navigasi cepat seperti pengalaman di website Fer6origami.',
+      icon: Icons.play_circle_outline_rounded,
+      color: AppColors.brand,
     ),
     (
-      title: 'Search, bookmark, and continue faster',
-      message: 'Pencarian realtime, bookmark lokal, dan progress card membuat sesi nonton terasa ringan dan profesional.',
-      icon: Icons.rocket_launch_rounded,
-      colors: [Color(0xFF53D1C8), Color(0xFF1F9D95)],
+      title: 'Catalog, ongoing, and watchlist',
+      message:
+          'Jelajahi katalog lengkap, ikuti episode ongoing, dan simpan anime favoritmu dalam satu tempat.',
+      icon: Icons.view_list_rounded,
+      color: AppColors.tide400,
     ),
     (
-      title: 'Built to scale into a real product',
-      message: 'Riverpod, go_router, reusable widgets, dan local persistence sudah disiapkan agar app ini enak dikembangkan.',
-      icon: Icons.widgets_rounded,
-      colors: [Color(0xFFFF6A3D), Color(0xFF53D1C8)],
+      title: 'Membership with real benefits',
+      message:
+          'Free, Premium, dan VIP menghadirkan kualitas 720p, 1080p, dan 4K UHD serta badge komentar berbeda.',
+      icon: Icons.workspace_premium_rounded,
+      color: AppColors.warning,
     ),
   ];
 
@@ -62,131 +65,114 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      body: DecoratedBox(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF11131C), AppColors.abyss, Color(0xFF0C0F17)],
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(22, 16, 22, 22),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    const _BrandMark(),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: _finish,
-                      child: const Text('Lewati'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: _items.length,
-                    onPageChanged: (value) => setState(() => _page = value),
-                    itemBuilder: (context, index) {
-                      final item = _items[index];
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(28),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(34),
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    item.colors.first.withValues(alpha: 0.28),
-                                    item.colors.last.withValues(alpha: 0.14),
-                                  ],
-                                ),
-                                border: Border.all(color: AppColors.stroke),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 74,
-                                    height: 74,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(24),
-                                      gradient: LinearGradient(colors: item.colors),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: item.colors.first.withValues(alpha: 0.28),
-                                          blurRadius: 22,
-                                          offset: const Offset(0, 12),
-                                        ),
-                                      ],
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 22),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  const _BrandMark(),
+                  const Spacer(),
+                  TextButton(onPressed: _finish, child: const Text('Lewati')),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: _items.length,
+                  onPageChanged: (value) => setState(() => _page = value),
+                  itemBuilder: (context, index) {
+                    final item = _items[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: AppColors.panel,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: AppColors.borderStrong),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 64,
+                                  height: 64,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: item.color.withValues(alpha: 0.16),
+                                    border: Border.all(
+                                      color: item.color.withValues(alpha: 0.4),
                                     ),
-                                    alignment: Alignment.center,
-                                    child: Icon(item.icon, size: 34, color: Colors.white),
                                   ),
-                                  const Spacer(),
-                                  Text(
-                                    '0${index + 1}',
-                                    style: textTheme.displayLarge?.copyWith(color: Colors.white.withValues(alpha: 0.16)),
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    item.icon,
+                                    size: 30,
+                                    color: item.color,
                                   ),
-                                  const SizedBox(height: 10),
-                                  Text(item.title, style: textTheme.displaySmall),
-                                  const SizedBox(height: 14),
-                                  Text(
-                                    item.message,
-                                    style: textTheme.bodyLarge?.copyWith(color: Colors.white70),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 28),
-                          Row(
-                            children: List.generate(
-                              _items.length,
-                              (index) => AnimatedContainer(
-                                duration: const Duration(milliseconds: 260),
-                                width: _page == index ? 28 : 10,
-                                height: 10,
-                                margin: const EdgeInsets.only(right: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(999),
-                                  color: _page == index ? AppColors.ember : const Color(0x22FFFFFF),
                                 ),
+                                const Spacer(),
+                                Text(
+                                  '0${index + 1}',
+                                  style: textTheme.displayLarge?.copyWith(
+                                    color: const Color(0x22FFFFFF),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(item.title, style: textTheme.displaySmall),
+                                const SizedBox(height: 12),
+                                Text(item.message, style: textTheme.bodyMedium),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Row(
+                          children: List.generate(
+                            _items.length,
+                            (index) => AnimatedContainer(
+                              duration: const Duration(milliseconds: 260),
+                              width: _page == index ? 28 : 10,
+                              height: 10,
+                              margin: const EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(999),
+                                color: _page == index
+                                    ? AppColors.brand
+                                    : const Color(0x22FFFFFF),
                               ),
                             ),
                           ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 18),
-                CustomButton.primary(
-                  label: _page == _items.length - 1 ? 'Mulai sekarang' : 'Lanjut',
-                  onPressed: () async {
-                    if (_page == _items.length - 1) {
-                      await _finish();
-                      return;
-                    }
-
-                    await _pageController.nextPage(
-                      duration: const Duration(milliseconds: 320),
-                      curve: Curves.easeOutCubic,
+                        ),
+                      ],
                     );
                   },
-                  icon: Icons.arrow_forward_rounded,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 18),
+              CustomButton.primary(
+                label: _page == _items.length - 1 ? 'Mulai sekarang' : 'Lanjut',
+                onPressed: () async {
+                  if (_page == _items.length - 1) {
+                    await _finish();
+                    return;
+                  }
+
+                  await _pageController.nextPage(
+                    duration: const Duration(milliseconds: 320),
+                    curve: Curves.easeOutCubic,
+                  );
+                },
+                icon: Icons.arrow_forward_rounded,
+              ),
+            ],
           ),
         ),
       ),
@@ -200,20 +186,28 @@ class _BrandMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        color: const Color(0x12FFFFFF),
-        border: Border.all(color: AppColors.stroke),
+        borderRadius: BorderRadius.circular(10),
+        color: AppColors.panel,
+        border: Border.all(color: AppColors.borderStrong),
       ),
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.play_circle_fill_rounded, color: AppColors.ember),
-          SizedBox(width: 10),
+          Icon(
+            Icons.local_fire_department_rounded,
+            color: AppColors.brand,
+            size: 18,
+          ),
+          SizedBox(width: 8),
           Text(
-            'AnimeStream',
-            style: TextStyle(fontWeight: FontWeight.w800),
+            'Fer6origami',
+            style: TextStyle(
+              fontFamily: 'Syne',
+              fontWeight: FontWeight.w800,
+              fontSize: 14,
+            ),
           ),
         ],
       ),

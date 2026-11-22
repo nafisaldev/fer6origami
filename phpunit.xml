@@ -19,6 +19,8 @@
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="OTAKUDESU_API_BASE_URL" value="http://127.0.0.1:3000/api"/>
+        <env name="OTAKUDESU_SOURCE_URL" value="https://otakudesu.best"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
         <!-- <env name="DB_CONNECTION" value="sqlite"/> -->

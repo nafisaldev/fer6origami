@@ -25,7 +25,9 @@ class PreferencesService {
     final prefs = await _prefs;
     final raw = prefs.getString(_bookmarksKey);
     if (raw == null || raw.isEmpty) return {};
-    return Set<String>.from((jsonDecode(raw) as List).map((item) => item.toString()));
+    return Set<String>.from(
+      (jsonDecode(raw) as List).map((item) => item.toString()),
+    );
   }
 
   Future<void> setBookmarks(Set<String> ids) async {

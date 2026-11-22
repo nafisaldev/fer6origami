@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class VisitorLog extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'ip_address',
+        'user_id',
+        'url',
+        'user_agent',
+        'device_name',
+        'device_type',
+        'browser',
+        'platform',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+}

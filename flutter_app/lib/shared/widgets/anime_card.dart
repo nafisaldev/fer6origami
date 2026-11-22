@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 import '../models/anime.dart';
 
+/// Kartu anime yang mengikuti resources/views/components/anime-card.blade.php.
 class AnimeCard extends StatelessWidget {
   const AnimeCard({
     super.key,
@@ -21,90 +22,105 @@ class AnimeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(28),
-        onTap: () => context.push('/anime/${anime.id}'),
-        child: Card(
-          clipBehavior: Clip.antiAlias,
+      child: Material(
+        color: AppColors.panel,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () => context.push('/anime/${anime.id}'),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: anime.posterUrl,
-                      fit: BoxFit.cover,
-                      errorWidget: (_, __, ___) => Container(
-                        color: AppColors.slate,
-                        alignment: Alignment.center,
-                        child: const Icon(Icons.broken_image_rounded, color: Colors.white54, size: 34),
+                child: AspectRatio(
+                  aspectRatio: 3 / 4,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl: anime.posterUrl,
+                        fit: BoxFit.cover,
+                        errorWidget: (_, __, ___) => Container(
+                          color: AppColors.panel,
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'Fer6origami',
+                            style: TextStyle(
+                              color: AppColors.brand400,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            AppColors.abyss.withValues(alpha: 0.94),
-                            Colors.transparent,
+                      const DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                              Color(0xE611131B),
+                              Color(0x3311131B),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 10,
+                        left: 10,
+                        child: _Badge(
+                          label: anime.type,
+                          backgroundColor: const Color(0xB3000000),
+                          foregroundColor: AppColors.textPrimary,
+                        ),
+                      ),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: _Badge(
+                          label: anime.score.toStringAsFixed(1),
+                          backgroundColor: const Color(0xCC000000),
+                          foregroundColor: AppColors.warning,
+                        ),
+                      ),
+                      Positioned(
+                        left: 12,
+                        right: 12,
+                        bottom: 10,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                anime.episodeInfo,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFFCBD5E1),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              '${anime.year}',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                    Positioned(
-                      top: 12,
-                      left: 12,
-                      child: _Badge(
-                        label: anime.type,
-                        backgroundColor: const Color(0x8F07080C),
-                      ),
-                    ),
-                    Positioned(
-                      top: 12,
-                      right: 12,
-                      child: _Badge(
-                        label: anime.score.toStringAsFixed(1),
-                        backgroundColor: const Color(0xCCFF6A3D),
-                      ),
-                    ),
-                    Positioned(
-                      left: 14,
-                      right: 14,
-                      bottom: 14,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            anime.status,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.white70,
-                                  letterSpacing: 0.2,
-                                ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            anime.headline,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(14, 14, 14, 16),
+                padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -112,30 +128,32 @@ class AnimeCard extends StatelessWidget {
                       anime.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        height: 1.25,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 5),
                     Text(
-                      anime.episodeInfo,
+                      anime.genres.take(2).join(', '),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     if (showProgress && anime.watchProgress > 0) ...[
-                      const SizedBox(height: 14),
+                      const SizedBox(height: 10),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(999),
                         child: LinearProgressIndicator(
                           value: anime.watchProgress,
-                          minHeight: 6,
-                          backgroundColor: const Color(0x18FFFFFF),
-                          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.ember),
+                          minHeight: 5,
+                          backgroundColor: const Color(0x14FFFFFF),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            AppColors.brand,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Lanjut dari episode ${anime.lastWatchedEpisode ?? 1}',
-                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ],
@@ -153,23 +171,29 @@ class _Badge extends StatelessWidget {
   const _Badge({
     required this.label,
     required this.backgroundColor,
+    required this.foregroundColor,
   });
 
   final String label;
   final Color backgroundColor;
+  final Color foregroundColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.stroke),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
-        label,
-        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Colors.white),
+        label.toUpperCase(),
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.4,
+          color: foregroundColor,
+        ),
       ),
     );
   }

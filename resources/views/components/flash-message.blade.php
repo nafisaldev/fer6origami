@@ -1,25 +1,23 @@
 @if (session('success') || session('error'))
     <div class="mb-6 space-y-3">
         @if (session('success'))
-            <div class="brand-frame flex items-start gap-4 rounded-[28px] border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-sm text-emerald-200">
-                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-emerald-400/20 bg-emerald-400/10 font-display text-sm font-bold text-emerald-100">
-                    OK
-                </div>
-                <div>
-                    <p class="text-xs uppercase tracking-[0.3em] text-emerald-200/70">Success</p>
-                    <p class="mt-1">{{ session('success') }}</p>
+            <div class="flex items-center gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                <svg class="h-5 w-5 shrink-0 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div class="flex-1 text-xs sm:text-sm font-medium">
+                    {{ session('success') }}
                 </div>
             </div>
         @endif
 
         @if (session('error'))
-            <div class="brand-frame flex items-start gap-4 rounded-[28px] border border-red-500/30 bg-red-500/10 px-5 py-4 text-sm text-red-200">
-                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-red-400/20 bg-red-400/10 font-display text-sm font-bold text-red-100">
-                    !
-                </div>
-                <div>
-                    <p class="text-xs uppercase tracking-[0.3em] text-red-200/70">Notice</p>
-                    <p class="mt-1">{{ session('error') }}</p>
+            <div class="flex items-center gap-3 rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+                <svg class="h-5 w-5 shrink-0 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div class="flex-1 text-xs sm:text-sm font-medium">
+                    {{ session('error') }}
                 </div>
             </div>
         @endif

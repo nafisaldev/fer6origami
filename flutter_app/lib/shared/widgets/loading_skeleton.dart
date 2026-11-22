@@ -6,7 +6,7 @@ class LoadingSkeleton extends StatelessWidget {
     super.key,
     this.height = 18,
     this.width = double.infinity,
-    this.radius = 16,
+    this.radius = 12,
   });
 
   final double height;
@@ -16,13 +16,13 @@ class LoadingSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height,
-      width: width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(radius),
-        color: const Color(0x14FFFFFF),
-      ),
-    )
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(radius),
+            color: const Color(0x14FFFFFF),
+          ),
+        )
         .animate(onPlay: (controller) => controller.repeat())
         .fade(begin: 0.35, end: 1, duration: 950.ms)
         .fade(begin: 1, end: 0.35, duration: 950.ms);
