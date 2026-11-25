@@ -7,6 +7,8 @@ if [ ! -d "$APP_DIR" ]; then
 fi
 cd "$APP_DIR"
 
+php artisan storage:link --force --no-interaction
+
 php artisan migrate --force --no-interaction
 
 if [ "${RUN_SEEDERS:-true}" = "true" ]; then

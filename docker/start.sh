@@ -8,6 +8,7 @@ PORT="${PORT:-8000}"
 php artisan config:clear || true
 php artisan cache:clear || true
 php artisan view:clear || true
+php artisan storage:link --force --no-interaction
 
 if [ "${DB_CONNECTION:-}" = "sqlite" ]; then
   DB_FILE="${DB_DATABASE:-/var/www/html/database/database.sqlite}"

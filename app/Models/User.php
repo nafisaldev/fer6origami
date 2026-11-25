@@ -217,14 +217,32 @@ class User extends Authenticatable
     public function getAvatarUrlAttribute(): string
     {
         if (blank($this->avatar_path)) {
-            return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=e53535&color=fff';
+            return $this->avatarPlaceholderUrl();
         }
 
         if (Str::startsWith($this->avatar_path, ['http://', 'https://'])) {
             return $this->avatar_path;
         }
 
-        return Storage::disk('public')->url($this->avatar_path);
+        return Storage::disk('public')->exists($this->avatar_path)
+            ? Storage::disk('public')->url($this->avatar_path)
+            : $this->avatarPlaceholderUrl();
+    }
+
+    private function avatarPlaceholderUrl(): string
+    {
+        $name = trim((string) $this->name);
+        $initial = $name === '' ? 'F' : Str::upper(Str::substr($name, 0, 1));
+        $initial = htmlspecialchars($initial, ENT_QUOTES, 'UTF-8');
+
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">'
+            . '<rect width="128" height="128" rx="24" fill="#161924"/>'
+            . '<text x="64" y="68" fill="#e53535" font-family="Manrope,Arial,sans-serif" font-size="54" font-weight="700" text-anchor="middle" dominant-baseline="central">'
+            . $initial
+            . '</text>'
+            . '</svg>';
+
+        return 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($svg);
     }
 
     public function getLevelAttribute(): int

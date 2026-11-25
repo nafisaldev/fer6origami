@@ -254,6 +254,36 @@
                 }
             });
 
+            // Broken stored avatars fall back to a local initial, not an empty image.
+            const useAvatarFallback = (image) => {
+                if (image.dataset.avatarFallbackApplied) return;
+
+                const initial = (image.getAttribute('alt') || '').trim().charAt(0).toUpperCase().replace(/[^A-Z0-9]/, '') || 'F';
+                const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">'
+                    + '<rect width="128" height="128" rx="24" fill="#161924"/>'
+                    + '<text x="64" y="68" fill="#e53535" font-family="Arial,sans-serif" font-size="54" font-weight="700" text-anchor="middle" dominant-baseline="central">'
+                    + initial
+                    + '</text></svg>';
+
+                image.dataset.avatarFallbackApplied = '1';
+                image.src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+            };
+
+            const isStoredAvatar = (src) => src.includes('/storage/avatars/') || src.includes('ui-avatars.com');
+
+            document.addEventListener('error', (event) => {
+                const image = event.target;
+                if (image instanceof HTMLImageElement && isStoredAvatar(image.currentSrc || image.src)) {
+                    useAvatarFallback(image);
+                }
+            }, true);
+
+            document.querySelectorAll('img').forEach((image) => {
+                if (isStoredAvatar(image.currentSrc || image.src) && image.complete && image.naturalWidth === 0) {
+                    useAvatarFallback(image);
+                }
+            });
+
             // Scroll-to-top visibility
             (() => {
                 const btn = document.getElementById('scroll-top-btn');
