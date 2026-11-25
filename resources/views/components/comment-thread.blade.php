@@ -55,13 +55,21 @@
         @forelse ($comments as $comment)
             @php
                 $style = $commentStyles->get($comment->user_id) ?? $defaultCommentStyle;
+                $commentName = $comment->user->name ?? 'User';
+                $commentAvatar = $comment->user?->avatar_url ?? (new \App\Models\User(['name' => $commentName]))->avatar_url;
+                $commentFallback = (new \App\Models\User(['name' => $commentName]))->avatar_url;
             @endphp
             <div class="rounded-xl border p-3.5 {{ $style['comment_card'] ?? 'border-white/5 bg-[#161924]' }}" id="comment-{{ $comment->id }}">
                 <div class="flex items-center justify-between gap-2">
                     <div class="flex min-w-0 items-center gap-2">
-                        <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold {{ $style['comment_avatar'] ?? 'bg-white/10 text-slate-300' }}">
-                            {{ strtoupper(substr($comment->user->name ?? 'User', 0, 1)) }}
-                        </div>
+                        <img
+                            src="{{ $commentAvatar }}"
+                            alt="{{ $commentName }}"
+                            loading="lazy"
+                            decoding="async"
+                            data-fallback-src="{{ $commentFallback }}"
+                            class="h-7 w-7 shrink-0 rounded-full object-cover ring-1 ring-white/10"
+                        >
                         <div class="min-w-0">
                             <div class="flex min-w-0 items-center gap-1.5">
                                 <span class="truncate text-xs font-bold {{ $style['comment_name'] ?? 'text-white' }}">{{ $comment->user->name ?? 'Community Member' }}</span>
@@ -119,13 +127,21 @@
                         @foreach ($comment->replies->sortBy('created_at') as $reply)
                             @php
                                 $replyStyle = $commentStyles->get($reply->user_id) ?? $defaultCommentStyle;
+                                $replyName = $reply->user->name ?? 'User';
+                                $replyAvatar = $reply->user?->avatar_url ?? (new \App\Models\User(['name' => $replyName]))->avatar_url;
+                                $replyFallback = (new \App\Models\User(['name' => $replyName]))->avatar_url;
                             @endphp
                             <div class="rounded-lg border p-3 {{ $replyStyle['comment_card'] ?? 'border-white/5 bg-[#11131b]' }}" id="comment-{{ $reply->id }}">
                                 <div class="flex items-center justify-between gap-2">
                                     <div class="flex min-w-0 items-center gap-2">
-                                        <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold {{ $replyStyle['comment_avatar'] ?? 'bg-white/10 text-slate-300' }}">
-                                            {{ strtoupper(substr($reply->user->name ?? 'User', 0, 1)) }}
-                                        </div>
+                                        <img
+                                            src="{{ $replyAvatar }}"
+                                            alt="{{ $replyName }}"
+                                            loading="lazy"
+                                            decoding="async"
+                                            data-fallback-src="{{ $replyFallback }}"
+                                            class="h-6 w-6 shrink-0 rounded-full object-cover ring-1 ring-white/10"
+                                        >
                                         <div class="flex min-w-0 items-center gap-1.5">
                                             <span class="truncate text-xs font-bold {{ $replyStyle['comment_name'] ?? 'text-white' }}">{{ $reply->user->name ?? 'Community Member' }}</span>
                                             @if (($replyStyle['tier'] ?? 'free') !== 'free')
