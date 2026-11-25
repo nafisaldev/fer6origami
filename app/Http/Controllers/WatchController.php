@@ -267,14 +267,16 @@ class WatchController extends Controller
         }
 
         // 4. Fetch Published Comments for Episode
-        $comments = Comment::query()
-            ->with(['user', 'replies.user'])
-            ->where('status', 'published')
-            ->whereNull('parent_id')
-            ->when($dbEpisode, fn ($q) => $q->where('episode_id', $dbEpisode->id))
-            ->latest()
-            ->take(30)
-            ->get();
+        $comments = $dbEpisode
+            ? Comment::query()
+                ->with(['user', 'replies.user'])
+                ->where('status', 'published')
+                ->whereNull('parent_id')
+                ->where('episode_id', $dbEpisode->id)
+                ->latest()
+                ->take(30)
+                ->get()
+            : collect();
 
         $defaultCommentStyle = $this->membership->visual(new User());
         $commentStyles = $comments
