@@ -38,7 +38,7 @@
         <link rel="manifest" href="/manifest.webmanifest">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
         @php
             $siteFavicon = \App\Models\WebsiteSetting::get('site_favicon');
@@ -261,7 +261,7 @@
                 const initial = (image.getAttribute('alt') || '').trim().charAt(0).toUpperCase().replace(/[^A-Z0-9]/, '') || 'F';
                 const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">'
                     + '<rect width="128" height="128" rx="24" fill="#161924"/>'
-                    + '<text x="64" y="68" fill="#e53535" font-family="Arial,sans-serif" font-size="54" font-weight="700" text-anchor="middle" dominant-baseline="central">'
+                    + '<text x="64" y="68" fill="#e53535" font-family="Inter,Arial,sans-serif" font-size="54" font-weight="700" text-anchor="middle" dominant-baseline="central">'
                     + initial
                     + '</text></svg>';
 

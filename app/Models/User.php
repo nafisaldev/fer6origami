@@ -241,7 +241,7 @@ class User extends Authenticatable
 
         $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">'
             . '<rect width="128" height="128" rx="24" fill="#161924"/>'
-            . '<text x="64" y="68" fill="#e53535" font-family="Manrope,Arial,sans-serif" font-size="54" font-weight="700" text-anchor="middle" dominant-baseline="central">'
+            . '<text x="64" y="68" fill="#e53535" font-family="Inter,Arial,sans-serif" font-size="54" font-weight="700" text-anchor="middle" dominant-baseline="central">'
             . $initial
             . '</text>'
             . '</svg>';
