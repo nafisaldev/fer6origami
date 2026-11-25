@@ -24,14 +24,17 @@
             {{-- PLAYER & CONTROLS COLUMN (8 COLS) --}}
             <div class="min-w-0 space-y-5 lg:col-span-8">
                 {{-- VIDEO FRAME --}}
-                <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-black shadow-elevated">
+                <div id="player-frame" class="relative overflow-hidden rounded-2xl border border-white/10 bg-black shadow-elevated">
                     @if (!empty($episode->stream_url))
                         @php
                             $isDirectVideo = preg_match('/\.(mp4|m3u8|webm)(\?.*)?$/i', $episode->stream_url);
                         @endphp
                         @if ($isDirectVideo)
                             <video
+                                id="watch-player"
                                 controls
+                                playsinline
+                                webkit-playsinline
                                 preload="metadata"
                                 class="aspect-video w-full bg-black object-contain"
                                 poster="{{ $episode->anime->banner_image }}"
@@ -41,10 +44,11 @@
                             </video>
                         @else
                             <iframe
+                                id="watch-player"
                                 src="{{ $episode->stream_url }}"
                                 class="aspect-video w-full bg-black"
                                 allowfullscreen
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                                 referrerpolicy="strict-origin-when-cross-origin"
                             ></iframe>
                         @endif
@@ -88,6 +92,17 @@
 
                     <div class="flex items-center gap-2">
                         @if (!empty($episode->stream_url))
+                            <button
+                                type="button"
+                                data-fullscreen-target="player-frame"
+                                data-fullscreen-player="watch-player"
+                                class="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white"
+                            >
+                                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+                                </svg>
+                                <span>Fullscreen</span>
+                            </button>
                             <a
                                 href="{{ $episode->stream_url }}"
                                 target="_blank"
@@ -402,4 +417,38 @@
             </form>
         </div>
     </div>
+
+    @if (!empty($episode->stream_url))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const button = document.querySelector('[data-fullscreen-target="player-frame"]');
+                const frame = document.getElementById('player-frame');
+                const player = document.getElementById('watch-player');
+                if (!button || !frame || !player) return;
+
+                const request = async () => {
+                    if (document.fullscreenElement) {
+                        await document.exitFullscreen();
+                        return;
+                    }
+
+                    if (player.tagName === 'VIDEO' && player.webkitEnterFullscreen) {
+                        player.webkitEnterFullscreen();
+                        return;
+                    }
+
+                    const target = frame.requestFullscreen ? frame : player;
+                    if (target.requestFullscreen) {
+                        await target.requestFullscreen();
+                    } else if (target.webkitRequestFullscreen) {
+                        target.webkitRequestFullscreen();
+                    }
+                };
+
+                button.addEventListener('click', () => {
+                    request().catch(() => {});
+                });
+            });
+        </script>
+    @endif
 @endsection
