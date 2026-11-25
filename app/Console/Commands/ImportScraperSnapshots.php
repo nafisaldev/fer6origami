@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
 class ImportScraperSnapshots extends Command
 {
     protected $signature = 'scraper:import-snapshots
-        {--force : Overwrite snapshots that already exist in the database}';
+        {--force : Overwrite snapshots even when unchanged}';
 
     protected $description = 'Import the bundled scraper snapshots into the database for offline catalog browsing.';
 
@@ -43,24 +43,27 @@ class ImportScraperSnapshots extends Command
 
                 if ($key === '' || $path === '') {
                     $skipped++;
-
                     continue;
                 }
 
-                $existing = ScraperSnapshot::query()->where('snapshot_key', $key)->exists();
+                $payload = (array) data_get($row, 'payload', []);
+                $storedAt = data_get($row, 'stored_at') ?: now();
+                $existing = ScraperSnapshot::query()->where('snapshot_key', $key)->first();
 
                 if ($existing && ! $force) {
-                    $skipped++;
-
-                    continue;
+                    $existingPayload = (array) ($existing->payload ?? []);
+                    if ($existing->path === $path && $existingPayload == $payload) {
+                        $skipped++;
+                        continue;
+                    }
                 }
 
                 ScraperSnapshot::query()->updateOrCreate(
                     ['snapshot_key' => $key],
                     [
                         'path' => $path,
-                        'payload' => (array) data_get($row, 'payload', []),
-                        'stored_at' => data_get($row, 'stored_at') ?: now(),
+                        'payload' => $payload,
+                        'stored_at' => $storedAt,
                     ]
                 );
 
