@@ -220,6 +220,10 @@ class User extends Authenticatable
             return $this->avatarPlaceholderUrl();
         }
 
+        if (Str::startsWith($this->avatar_path, 'db://')) {
+            return route('avatar.show', $this->id);
+        }
+
         if (Str::startsWith($this->avatar_path, ['http://', 'https://'])) {
             return $this->avatar_path;
         }

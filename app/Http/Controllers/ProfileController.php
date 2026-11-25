@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\MembershipPlan;
 use App\Models\User;
+use App\Models\UserAvatar;
 use App\Models\UserMembership;
 use App\Services\MembershipService;
 use App\Services\UserEngagementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
@@ -68,11 +69,21 @@ class ProfileController extends Controller
         ]);
 
         if ($request->hasFile('avatar')) {
-            if ($user->avatar_path && !str_starts_with($user->avatar_path, 'http') && Storage::disk('public')->exists($user->avatar_path)) {
-                Storage::disk('public')->delete($user->avatar_path);
-            }
+            $file = $request->file('avatar');
+            $binary = (string) file_get_contents($file->getRealPath());
 
-            $validated['avatar_path'] = $request->file('avatar')->store('avatars', 'public');
+            DB::transaction(function () use ($user, $file, $binary, &$validated): void {
+                UserAvatar::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'mime' => $file->getMimeType() ?: 'application/octet-stream',
+                        'data' => base64_encode($binary),
+                        'size' => strlen($binary),
+                    ]
+                );
+
+                $validated['avatar_path'] = 'db://avatars/' . $file->hashName();
+            });
         }
 
         $user->update($validated);

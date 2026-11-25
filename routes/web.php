@@ -39,6 +39,7 @@ use App\Http\Controllers\Admin\VoucherController as AdminVoucherController;
 use App\Http\Controllers\Admin\WatchActivityController as AdminWatchActivityController;
 use App\Http\Controllers\AnimeCatalogController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
@@ -64,6 +65,7 @@ Route::middleware('cache.headers:private;max_age=120;etag')->group(function () {
 
 Route::get('/home', fn () => redirect()->route('home'));
 Route::get('/image-proxy', ImageProxyController::class)->name('image.proxy');
+Route::get('/avatar/{user}', [AvatarController::class, 'show'])->name('avatar.show');
 
 Route::get('/robots.txt', function () {
     $content = \App\Models\WebsiteSetting::get('robots_txt', "User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /api/");

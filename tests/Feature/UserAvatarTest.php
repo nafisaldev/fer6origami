@@ -42,6 +42,14 @@ class UserAvatarTest extends TestCase
         $this->assertStringStartsWith('data:image/svg+xml', $user->avatar_url);
     }
 
+    public function test_database_avatar_uses_persistent_route(): void
+    {
+        $user = new User(['name' => 'Nafisa', 'avatar_path' => 'db://avatars/avatar.jpg']);
+        $user->id = 12;
+
+        $this->assertStringContainsString('/avatar/12', $user->avatar_url);
+    }
+
     public function test_absolute_avatar_url_is_preserved(): void
     {
         $user = new User([
