@@ -245,70 +245,16 @@
                     </div>
                 @endif
 
-                {{-- COMMENTS & DISCUSSION SECTION --}}
-                <div class="surface-panel rounded-xl p-5">
-                    <div class="mb-4 flex items-center justify-between border-b border-white/5 pb-2">
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Comments & Community Discussion</span>
-                        <span class="text-xs text-slate-400">{{ isset($comments) ? $comments->count() : 0 }} Comments</span>
-                    </div>
-
-                    @auth
-                        <form action="{{ route('comments.store') }}" method="POST" class="mb-6 space-y-3">
-                            @csrf
-                            @if (!empty($dbEpisode))
-                                <input type="hidden" name="episode_id" value="{{ $dbEpisode->id }}">
-                                <input type="hidden" name="anime_id" value="{{ $dbEpisode->anime_id }}">
-                            @endif
-                            <textarea
-                                name="content"
-                                rows="3"
-                                required
-                                placeholder="Share your thoughts about this episode..."
-                                class="w-full rounded-xl border border-white/10 bg-[#11131b] p-3 text-xs text-white placeholder:text-slate-500 focus:border-brand-500 focus:outline-none"
-                            ></textarea>
-                            <div class="flex justify-end">
-                                <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-600">
-                                    Post Comment
-                                </button>
-                            </div>
-                        </form>
-                    @else
-                        <div class="mb-6 rounded-xl border border-white/5 bg-[#161924] p-4 text-center text-xs text-slate-400">
-                            Please <a href="{{ route('login') }}" class="font-bold text-brand-400 hover:underline">Log In</a> to join the conversation and comment on this episode.
-                        </div>
-                    @endauth
-
-                    <div class="space-y-3">
-                        @if (isset($comments) && $comments->count())
-                            @foreach ($comments as $comment)
-                                @php
-                                    $style = $commentStyles->get($comment->user_id) ?? $defaultCommentStyle;
-                                @endphp
-                                <div class="rounded-xl border p-3.5 {{ $style['comment_card'] }}">
-                                    <div class="flex items-center justify-between gap-2">
-                                        <div class="flex min-w-0 items-center gap-2">
-                                            <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold {{ $style['comment_avatar'] }}">
-                                                {{ strtoupper(substr($comment->user->name ?? 'User', 0, 1)) }}
-                                            </div>
-                                            <div class="min-w-0">
-                                                <div class="flex min-w-0 items-center gap-1.5">
-                                                    <span class="truncate text-xs font-bold {{ $style['comment_name'] }}">{{ $comment->user->name ?? 'Community Member' }}</span>
-                                                    @if ($style['tier'] !== 'free')
-                                                        <span class="shrink-0 rounded border px-1.5 py-0.5 text-[9px] font-extrabold uppercase {{ $style['comment_badge'] }}">{{ $style['label'] }}</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <span class="shrink-0 text-[10px] text-slate-400">{{ $comment->created_at->diffForHumans() }}</span>
-                                    </div>
-                                    <p class="mt-2 text-xs text-slate-200 leading-relaxed">{{ $comment->content }}</p>
-                                </div>
-                            @endforeach
-                        @else
-                            <p class="py-4 text-center text-xs text-slate-500">No comments yet. Be the first to share your thoughts!</p>
-                        @endif
-                    </div>
-                </div>
+                {{-- COMMENTS & DISCUSSION --}}
+                <x-comment-thread
+                    :comments="$comments"
+                    :comment-styles="$commentStyles"
+                    :default-comment-style="$defaultCommentStyle"
+                    :anime-id="$dbEpisode?->anime_id"
+                    :episode-id="$dbEpisode?->id"
+                    title="Comments & Community Discussion"
+                    placeholder="Share your thoughts about this episode..."
+                />
             </div>
 
             {{-- PLAYLIST & SERIES DETAILS COLUMN (4 COLS) --}}
@@ -402,70 +348,16 @@
                     </div>
                 @endif
 
-                {{-- COMMENTS & DISCUSSION SECTION --}}
-                <div class="surface-panel rounded-xl p-5">
-                    <div class="mb-4 flex items-center justify-between border-b border-white/5 pb-2">
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Comments & Community Discussion</span>
-                        <span class="text-xs text-slate-400">{{ isset($comments) ? $comments->count() : 0 }} Comments</span>
-                    </div>
-
-                    @auth
-                        <form action="{{ route('comments.store') }}" method="POST" class="mb-6 space-y-3">
-                            @csrf
-                            @if (!empty($dbEpisode))
-                                <input type="hidden" name="episode_id" value="{{ $dbEpisode->id }}">
-                                <input type="hidden" name="anime_id" value="{{ $dbEpisode->anime_id }}">
-                            @endif
-                            <textarea
-                                name="content"
-                                rows="3"
-                                required
-                                placeholder="Share your thoughts about this episode..."
-                                class="w-full rounded-xl border border-white/10 bg-[#11131b] p-3 text-xs text-white placeholder:text-slate-500 focus:border-brand-500 focus:outline-none"
-                            ></textarea>
-                            <div class="flex justify-end">
-                                <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-600">
-                                    Post Comment
-                                </button>
-                            </div>
-                        </form>
-                    @else
-                        <div class="mb-6 rounded-xl border border-white/5 bg-[#161924] p-4 text-center text-xs text-slate-400">
-                            Please <a href="{{ route('login') }}" class="font-bold text-brand-400 hover:underline">Log In</a> to join the conversation and comment on this episode.
-                        </div>
-                    @endauth
-
-                    <div class="space-y-3">
-                        @if (isset($comments) && $comments->count())
-                            @foreach ($comments as $comment)
-                                @php
-                                    $style = $commentStyles->get($comment->user_id) ?? $defaultCommentStyle;
-                                @endphp
-                                <div class="rounded-xl border p-3.5 {{ $style['comment_card'] }}">
-                                    <div class="flex items-center justify-between gap-2">
-                                        <div class="flex min-w-0 items-center gap-2">
-                                            <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold {{ $style['comment_avatar'] }}">
-                                                {{ strtoupper(substr($comment->user->name ?? 'User', 0, 1)) }}
-                                            </div>
-                                            <div class="min-w-0">
-                                                <div class="flex min-w-0 items-center gap-1.5">
-                                                    <span class="truncate text-xs font-bold {{ $style['comment_name'] }}">{{ $comment->user->name ?? 'Community Member' }}</span>
-                                                    @if ($style['tier'] !== 'free')
-                                                        <span class="shrink-0 rounded border px-1.5 py-0.5 text-[9px] font-extrabold uppercase {{ $style['comment_badge'] }}">{{ $style['label'] }}</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <span class="shrink-0 text-[10px] text-slate-400">{{ $comment->created_at->diffForHumans() }}</span>
-                                    </div>
-                                    <p class="mt-2 text-xs text-slate-200 leading-relaxed">{{ $comment->content }}</p>
-                                </div>
-                            @endforeach
-                        @else
-                            <p class="py-4 text-center text-xs text-slate-500">No comments yet. Be the first to share your thoughts!</p>
-                        @endif
-                    </div>
-                </div>
+                {{-- COMMENTS & DISCUSSION --}}
+                <x-comment-thread
+                    :comments="$comments"
+                    :comment-styles="$commentStyles"
+                    :default-comment-style="$defaultCommentStyle"
+                    :anime-id="$dbEpisode?->anime_id"
+                    :episode-id="$dbEpisode?->id"
+                    title="Comments & Community Discussion"
+                    placeholder="Share your thoughts about this episode..."
+                />
             </div>
         </section>
     </div>

@@ -27,11 +27,34 @@ class UserInteractionController extends Controller
             return back()->withErrors(['content' => 'Comment cannot be empty.']);
         }
 
+        $parentId = $data['parent_id'] ?? null;
+        $animeId = $data['anime_id'] ?? null;
+        $episodeId = $data['episode_id'] ?? null;
+
+        if ($parentId) {
+            $parent = Comment::query()->whereKey($parentId)->firstOrFail();
+
+            if ($parent->parent_id) {
+                return back()->withErrors(['content' => 'Replies can only be one level deep.']);
+            }
+
+            if ($animeId && $parent->anime_id && (int) $animeId !== (int) $parent->anime_id) {
+                return back()->withErrors(['content' => 'Reply does not belong to this anime.']);
+            }
+
+            if ($episodeId && $parent->episode_id && (int) $episodeId !== (int) $parent->episode_id) {
+                return back()->withErrors(['content' => 'Reply does not belong to this episode.']);
+            }
+
+            $animeId = $animeId ?: $parent->anime_id;
+            $episodeId = $episodeId ?: $parent->episode_id;
+        }
+
         Comment::create([
             'user_id' => Auth::id(),
-            'anime_id' => $data['anime_id'] ?? null,
-            'episode_id' => $data['episode_id'] ?? null,
-            'parent_id' => $data['parent_id'] ?? null,
+            'anime_id' => $animeId,
+            'episode_id' => $episodeId,
+            'parent_id' => $parentId,
             'content' => $commentText,
             'status' => 'published',
         ]);

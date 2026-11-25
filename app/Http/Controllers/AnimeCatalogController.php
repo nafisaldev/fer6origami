@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Anime;
 use App\Models\Comment;
 use App\Models\Review;
+use App\Models\User;
+use App\Services\MembershipService;
 use App\Services\OtakudesuApiService;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -15,8 +17,10 @@ use Throwable;
 
 class AnimeCatalogController extends Controller
 {
-    public function __construct(private readonly OtakudesuApiService $api)
-    {
+    public function __construct(
+        private readonly OtakudesuApiService $api,
+        private readonly MembershipService $membership,
+    ) {
     }
 
     public function index(Request $request): View
@@ -156,6 +160,16 @@ class AnimeCatalogController extends Controller
             ->take(20)
             ->get();
 
+        $defaultCommentStyle = $this->membership->visual(new User());
+        $commentStyles = $comments
+            ->filter(fn ($comment) => $comment->user !== null)
+            ->flatMap(fn ($comment) => collect([$comment])->merge($comment->replies))
+            ->filter(fn ($comment) => $comment->user !== null)
+            ->unique('user_id')
+            ->mapWithKeys(fn ($comment) => [
+                $comment->user_id => $this->membership->visual($comment->user),
+            ]);
+
         return view('anime.show', [
             'anime' => $anime,
             'dbAnime' => $dbAnime,
@@ -163,6 +177,8 @@ class AnimeCatalogController extends Controller
             'isInWatchlist' => $isInWatchlist,
             'reviews' => $reviews,
             'comments' => $comments,
+            'commentStyles' => $commentStyles,
+            'defaultCommentStyle' => $defaultCommentStyle,
         ]);
     }
 

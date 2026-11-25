@@ -279,6 +279,9 @@ class WatchController extends Controller
         $defaultCommentStyle = $this->membership->visual(new User());
         $commentStyles = $comments
             ->filter(fn ($comment) => $comment->user !== null)
+            ->flatMap(fn ($comment) => collect([$comment])->merge($comment->replies))
+            ->filter(fn ($comment) => $comment->user !== null)
+            ->unique('user_id')
             ->mapWithKeys(fn ($comment) => [
                 $comment->user_id => $this->membership->visual($comment->user),
             ]);

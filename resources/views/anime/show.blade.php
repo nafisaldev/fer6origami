@@ -250,6 +250,16 @@
                         @endforelse
                     </div>
                 </div>
+
+                {{-- COMMENTS & DISCUSSION --}}
+                <x-comment-thread
+                    :comments="$comments"
+                    :comment-styles="$commentStyles"
+                    :default-comment-style="$defaultCommentStyle"
+                    :anime-id="$dbAnime?->id"
+                    title="Comments & Discussion"
+                    placeholder="Share your thoughts about this anime..."
+                />
             </div>
 
             {{-- SIDEBAR: METADATA & RELATED ANIME (4 COLS) --}}
