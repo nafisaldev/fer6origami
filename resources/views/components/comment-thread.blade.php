@@ -17,33 +17,39 @@
         <span class="text-xs text-slate-400">{{ $totalCommentCount }} {{ Str::plural('Comment', $totalCommentCount) }}</span>
     </div>
 
-    @auth
-        <form action="{{ route('comments.store') }}" method="POST" class="mb-6 space-y-3">
-            @csrf
-            @if ($animeId)
-                <input type="hidden" name="anime_id" value="{{ $animeId }}">
-            @endif
-            @if ($episodeId)
-                <input type="hidden" name="episode_id" value="{{ $episodeId }}">
-            @endif
-            <textarea
-                name="content"
-                rows="3"
-                required
-                placeholder="{{ $placeholder }}"
-                class="w-full rounded-xl border border-white/10 bg-[#11131b] p-3 text-xs text-white placeholder:text-slate-500 focus:border-brand-500 focus:outline-none"
-            ></textarea>
-            <div class="flex justify-end">
-                <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-600">
-                    Post Comment
-                </button>
+    @if ($animeId || $episodeId)
+        @auth
+            <form action="{{ route('comments.store') }}" method="POST" class="mb-6 space-y-3">
+                @csrf
+                @if ($animeId)
+                    <input type="hidden" name="anime_id" value="{{ $animeId }}">
+                @endif
+                @if ($episodeId)
+                    <input type="hidden" name="episode_id" value="{{ $episodeId }}">
+                @endif
+                <textarea
+                    name="content"
+                    rows="3"
+                    required
+                    placeholder="{{ $placeholder }}"
+                    class="w-full rounded-xl border border-white/10 bg-[#11131b] p-3 text-xs text-white placeholder:text-slate-500 focus:border-brand-500 focus:outline-none"
+                ></textarea>
+                <div class="flex justify-end">
+                    <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-600">
+                        Post Comment
+                    </button>
+                </div>
+            </form>
+        @else
+            <div class="mb-6 rounded-xl border border-white/5 bg-[#161924] p-4 text-center text-xs text-slate-400">
+                Please <a href="{{ route('login') }}" class="font-bold text-brand-400 hover:underline">Log In</a> to join the conversation.
             </div>
-        </form>
+        @endauth
     @else
         <div class="mb-6 rounded-xl border border-white/5 bg-[#161924] p-4 text-center text-xs text-slate-400">
-            Please <a href="{{ route('login') }}" class="font-bold text-brand-400 hover:underline">Log In</a> to join the conversation.
+            Comments are available after this anime is added to the catalog.
         </div>
-    @endauth
+    @endif
 
     <div class="space-y-3">
         @forelse ($comments as $comment)

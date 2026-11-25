@@ -151,14 +151,17 @@ class AnimeCatalogController extends Controller
             ->take(10)
             ->get();
 
-        $comments = Comment::query()
-            ->with(['user', 'replies.user'])
-            ->where('status', 'published')
-            ->whereNull('parent_id')
-            ->when($dbAnime, fn ($q) => $q->where('anime_id', $dbAnime->id))
-            ->latest()
-            ->take(20)
-            ->get();
+        $comments = $dbAnime
+            ? Comment::query()
+                ->with(['user', 'replies.user'])
+                ->where('status', 'published')
+                ->whereNull('parent_id')
+                ->where('anime_id', $dbAnime->id)
+                ->whereNull('episode_id')
+                ->latest()
+                ->take(20)
+                ->get()
+            : collect();
 
         $defaultCommentStyle = $this->membership->visual(new User());
         $commentStyles = $comments
