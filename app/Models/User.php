@@ -221,7 +221,7 @@ class User extends Authenticatable
         }
 
         if (Str::startsWith($this->avatar_path, 'db://')) {
-            return route('avatar.show', $this->id);
+            return route('avatar.show', $this->id) . '?v=' . substr(md5($this->avatar_path), 0, 10);
         }
 
         if (Str::startsWith($this->avatar_path, ['http://', 'https://'])) {
